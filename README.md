@@ -48,27 +48,27 @@ Full configs: [`LLAMA_CPP_CONF.md`](LLAMA_CPP_CONF.md),
 
 | Prompt length | llama.cpp no-MTP | llama.cpp MTP | exllamav3 | Polystrata |
 | ---: | ---: | ---: | ---: | ---: |
-| 4 000 | 966 (4.29) | 824 (5.02) | 1 309 (3.16) | **1 770 (2.34)** |
-| 16 000 | 1 032 (15.78) | 881 (18.49) | 1 395 (11.68) | **1 963 (8.30)** |
-| 32 000 | — | — | 1 388 (23.56) | **1 614 (20.26)** |
-| 64 000 | — | — | 1 321 (49.48) | **1 088 (60.08)** |
-| 96 000 | — | — | 1 225 (80.45) | 832 (118.35) |
-| 126 000 | — | — | — (rejected: 128k prompt over 130 816 ctx) | 710 (181.78) |
+| 4 000 | 966 (4.29) | 824 (5.02) | 670 (6.18) | **1 770 (2.34)** |
+| 16 000 | 1 032 (15.78) | 881 (18.49) | 1 154 (14.12) | **1 963 (8.30)** |
+| 32 000 | — | — | 1 425 (22.94) | **1 614 (20.26)** |
+| 64 000 | — | — | **1 344 (48.64)** | 1 088 (60.08) |
+| 96 000 | — | — | **1 273 (77.41)** | 832 (118.35) |
+| 126 000 | — | — | **1 214 (106.29)** | 710 (181.78) |
 
 ### Decode, tok/s (median over runs)
 
 | Context length | llama.cpp no-MTP | llama.cpp MTP | exllamav3 | Polystrata |
 | ---: | ---: | ---: | ---: | ---: |
-| ~16 (short) | 62.7 | 52.5 | 34.6 | **92.7** |
-| 4 000 | 61.7 | 58.1 | 36.9 | **93.1** |
-| 16 000 | 57.0 | 50.8 | 35.0 | **84.5** |
-| 32 000 | — | — | 33.5 | **74.6** |
-| 64 000 | — | — | 32.3 | **58.5** |
-| 96 000 | — | — | 31.7 | **49.8** |
-| 126 000 | — | — | — | **43.2** |
+| ~16 (short) | 62.7 | 52.5 | 75.4 | **92.7** |
+| 4 000 | 61.7 | 58.1 | 74.9 | **93.1** |
+| 16 000 | 57.0 | 50.8 | **85.4** | 84.5 |
+| 32 000 | — | — | 67.8 | **74.6** |
+| 64 000 | — | — | **61.1** | 58.5 |
+| 96 000 | — | — | **52.7** | 49.8 |
+| 126 000 | — | — | **50.0** | 43.2 |
 
-"-" = not run for that config (llama.cpp runs covered only 4k/16k; exllamav3
-rejected the 128k prompt).
+"-" = not run. exllamav3 figures are the 15:59Z run; its 32k decode median
+includes two early-stop runs (115/208 tokens).
 
 ### Throughput vs. context length
 
@@ -79,38 +79,39 @@ the left edge. Generated with `plots/make_plots.py` (`python3` + matplotlib).
 
 ## Findings so far
 
-1. **Polystrata is the fastest engine on every metric measured** — ~1.5× llama.cpp
-   and ~2.7× exllamav3 in short-context decode (92.7 vs 62.7 vs 34.6 tok/s), and
-   the strongest prefill at every context length (up to ~1.9× llama.cpp, ~1.4×
-   exllamav3 at short context). Its expert-profile-driven hot cache appears to pay
-   off hard on RDNA4.
-2. **Decode degrades with context — but slopes differ.** Polystrata falls from
-   ~93 to ~43 tok/s at 126k context (~54% drop). exllamav3's decode is much weaker
-   in absolute terms but far flatter (~37 → ~32 tok/s, drop only just above 16k).
-   llama.cpp sits in between at the lengths measured (62.7 → 57).
-3. **Prefill throughput vs. context:** exllamav3 stays remarkably steady at
-   ~1.2–1.4k tok/s out to 96k; Polystrata degrades from 1 963 (16k) to 710 (126k),
-   the largest long-context slowdown across all three engines (KV-heavy at
-   `--kv-whole`). llama.cpp is the slowest measured prefill (824–1 032 tok/s) and
-   looks roughly flat between the two lengths it covers (966 at 4k, 1 032 at 16k).
+1. **Short context: Polystrata is fastest** — 92.7 tok/s short-context decode
+   (vs 75.4 exllamav3, 62.7 llama.cpp no-MTP) and the strongest prefill at short
+   prompts (1 770 tok/s at 4k, 1 963 at 16k). Its expert-profile-driven hot cache
+   pays off hard on RDNA4.
+2. **Long-context decode flips to exllamav3.** exllamav3's decode is the flattest
+   (75.4 → 50.0 at 126k, ~34% drop) and beats Polystrata at 16k (85.4 vs
+   84.5) and from 64k on (61.1 vs 58.5 … 50.0 vs 43.2); Polystrata still leads at 32k
+   (74.6 vs 67.8). Polystrata has the steepest slope (92.7 → 43.2, ~53% drop),
+   consistent with its KV-heavy `--kv-whole` policy at long context.
+3. **Prefill scaling:** exllamav3 holds ~1.2–1.4k tok/s out to 126k (1 214),
+   better than anyone else there; Polystrata degrades from 1 963 (16k) to 710
+   (126k); llama.cpp is the slowest prefill measured (966 at 4k, 1 032 at 16k only
+   two lengths; MTP 824/881).
 4. **MTP makes llama.cpp slower, not faster, in this stack.** With MTP the no-MTP
    baseline is beaten on prefill (824/881 vs 966/1 032 tok/s) and on decode
    (52.5 vs 62.7 tok/s short context; 50.8 vs 57.0 at 16k) — the CPU-side
    speculation cost outweighs draft acceptance at 30 CPU-resident experts.
 5. **Hot cache benefit is real where it exists.** llama.cpp's 4 096 MiB
-   `--moe-cache-mib` keeps short-context decode within ~2 tok/s of the short-prompt
-   numbers at 4k/16k; exllamav3 shows a similar near-flat profile (36.9 at 4k vs
-   34.6 short). Polystrata's profile + cache is what separates it entirely.
-6. **exllamav3 is the outlier in decode** (34.6 tok/s short context, ~1.8× below
-   llama.cpp despite a stronger per-token pipeline for prefill) — even with its
-   DFlash2 draft model configured. Worth verifying whether spec decode was
-   actually active during the benchmarked runs.
+   `--moe-cache-mib` keeps decode within ~6 tok/s of the short-prompt numbers at
+   4k/16k; exllamav3 sits at 74.9 at 4k (short: 75.4). Polystrata stays within
+   ~9 tok/s through 16k before its long-context slope takes over.
 
 ## Caveats
 
-- Medians over ≤5 runs; TTFT std-dev across samples was low in most cases.
-- A few runs ended early (`finish_reason: stop`) and are flagged in the JSON files;
-  medians include them.
+- Two exllamav3 runs exist: 14:51Z and 15:59Z. Tables use the **15:59Z run**
+  (DFlash2 draft config, full 126k coverage). The earlier 14:51Z run delivered
+  ~35 tok/s short-context decode and rejected the 126k prompt — the ~2× decode
+  gap between the two runs needs a written explanation before either can be
+  called canonical.
+- exllamav3 15:59Z TTFT is noisy at short prompts: 4k samples 3.4–8.1 s, 16k
+  11.3–23.1 s, so its 670 tok/s (4k) prefill partially reflects that variance.
+- Medians over ≤5 runs; a few runs ended early (`finish_reason: stop`) and are
+  flagged in the JSON files; medians include them.
 - Token-count checks (`prompt_tokens unchecked`) apply to all engines; benchmark
   prompts are synthetic corpus text.
 - Each engine uses a different quantization (APEX GGUF vs EXL3 4.00 bpw), so
@@ -118,7 +119,8 @@ the left edge. Generated with `plots/make_plots.py` (`python3` + matplotlib).
 
 ## Raw results
 
-- `exllamav3-ornith-1-5-35b-a3b-exl3-4-00bpw-24gb.json`
+- `exllamav3-20261111T155934Z-ornith-1-5-35b-a3b-exl3-4-00bpw-24gb.json` (canonical)
+- `exllamav3-20261111T145111Z-ornith-1-5-35b-a3b-exl3-4-00bpw-24gb.json` (stale run)
 - `llamacpp-ornith-1-5-35b-a3b-apex-i-quality-no-mtp.json`
 - `llamacpp-ornith-1-5-35b-a3b-apex-i-quality-mtp.json`
 - `polystrata-ornith-1-5-35b-a3b-apex-i-quality.json`
