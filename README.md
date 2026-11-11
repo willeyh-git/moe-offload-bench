@@ -1,4 +1,4 @@
-# moe-offload-bench
+# Exploring MoE CPU offloading and hot cache experts
 
 Exploring MoE expert CPU offloading and hot expert caches across different
 inference engines on RDNA4 (Radeon 9070 XT).
