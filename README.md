@@ -70,6 +70,13 @@ Full configs: [`LLAMA_CPP_CONF.md`](LLAMA_CPP_CONF.md),
 "-" = not run for that config (llama.cpp runs covered only 4k/16k; exllamav3
 rejected the 128k prompt).
 
+### Throughput vs. context length
+
+![Prefill and decode throughput per context length](plots/benchmarks.png)
+
+Both panels: log-scaled axes; short-context decode (prompt ~16 tok) plotted at
+the left edge. Generated with `plots/make_plots.py` (`python3` + matplotlib).
+
 ## Findings so far
 
 1. **Polystrata is the fastest engine on every metric measured** — ~1.5× llama.cpp
