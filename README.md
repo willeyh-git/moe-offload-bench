@@ -25,6 +25,13 @@ inference engines on RDNA4 (Radeon 9070 XT).
   shared corpus (sha256 `58a7756f…`). Runs dated 2026-11-11.
 - **Hot expert cache mechanism differs per engine** — see configs below.
 
+### Models
+
+| Engine | Quantization |
+| --- | --- |
+| llama.cpp, Polystrata | APEX MTP GGUF — [mudler/Ornith-1.5-35B-A3B-APEX-MTP-GGUF](https://huggingface.co/mudler/Ornith-1.5-35B-A3B-APEX-MTP-GGUF) (quality file: `Ornith-1.5-35B-A3B-APEX-MTP-Quality.gguf`) |
+| exllamav3 | [JRamirez-UAB/Ornith-1.5-35B-A3B-EXL3-4.00bpw-24GB](https://huggingface.co/JRamirez-UAB/Ornith-1.5-35B-A3B-EXL3-4.00bpw-24GB); DFlash2 draft requanted to EXL3 (3.0 bpw) from [jzinno/Ornith-1.5-35B-A3B-DFlash2](https://huggingface.co/jzinno/Ornith-1.5-35B-A3B-DFlash2) |
+
 ## Config summary
 
 | Engine | Model file | GPU offload / expert offload | KV cache | Context | Sampling |
