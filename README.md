@@ -58,27 +58,29 @@ Full configs: [`LLAMA_CPP_CONF.md`](LLAMA_CPP_CONF.md),
 
 | Prompt length | llama.cpp no-MTP | llama.cpp MTP | exllamav3 | Polystrata |
 | ---: | ---: | ---: | ---: | ---: |
-| 4 000 | 966 (4.29) | 824 (5.02) | 670 (6.18) | **1 770 (2.34)** |
-| 16 000 | 1 032 (15.78) | 881 (18.49) | 1 154 (14.12) | **1 963 (8.30)** |
-| 32 000 | — | — | 1 425 (22.94) | **1 614 (20.26)** |
-| 64 000 | — | — | **1 344 (48.64)** | 1 088 (60.08) |
-| 96 000 | — | — | **1 273 (77.41)** | 832 (118.35) |
-| 128 000 | — | — | **1 214 (106.29)** | 710 (181.78) |
+| 4 000 | 965 (4.29) | 824 (5.02) | 1 293 (3.20) | **1 723 (2.40)** |
+| 16 000 | 1 033 (15.78) | 881 (18.49) | 1 356 (12.02) | **1 938 (8.41)** |
+| 32 000 | 1 003 (32.61) | — | 1 344 (24.32) | **1 605 (20.38)** |
+| 64 000 | 932 (70.17) | — | **1 279 (51.11)** | 1 133 (57.72) |
+| 96 000 | 877 (112.30) | — | **1 222 (80.65)** | 856 (115.10) |
+| 128 000 | 831 (155.25) | — | **1 168 (110.41)** | 709 (181.93) |
 
 ### Decode, tok/s (median over runs)
 
 | Context length | llama.cpp no-MTP | llama.cpp MTP | exllamav3 | Polystrata |
 | ---: | ---: | ---: | ---: | ---: |
-| ~16 (short) | 62.7 | 52.5 | 75.4 | **92.7** |
-| 4 000 | 61.7 | 58.1 | 74.9 | **93.1** |
-| 16 000 | 57.0 | 50.8 | **85.4** | 84.5 |
-| 32 000 | — | — | 67.8 | **74.6** |
-| 64 000 | — | — | **61.1** | 58.5 |
-| 96 000 | — | — | **52.7** | 49.8 |
-| 128 000 | — | — | **50.0** | 43.2 |
+| ~16 (short) | 62.6 | 52.5 | **94.0** | 93.9 |
+| 4 000 | 62.3 | 58.1 | **92.3** | 91.1 |
+| 16 000 | 57.0 | 50.8 | **104.5** | 83.0 |
+| 32 000 | 52.1 | — | **82.6** | 74.3 |
+| 64 000 | 45.1 | — | **73.1** | 58.9 |
+| 96 000 | 39.2 | — | **61.7** | 50.1 |
+| 128 000 | 35.0 | — | **57.3** | 41.1 |
 
-"-" = not run. exllamav3 figures are the 15:59Z run; its 32k decode median
-includes two early-stop runs (115/208 tokens).
+"-" = not run. The llama.cpp MTP column is the earlier 19:56Z run (4k/16k only,
+not re-run). exllamav3 figures are the canonical 20:53Z run; its 32k decode
+median includes two early-stop runs (244/245 tokens). llama.cpp's 96k decode
+comes from two early-stop runs (140/170 tokens), its only such context this run.
 
 ### Throughput vs. context length
 
@@ -89,39 +91,48 @@ Generated with `plots/make_plots.py` (`python3` + matplotlib).
 
 ## Findings so far
 
-1. **Short context: Polystrata is fastest** — 92.7 tok/s short-context decode
-   (vs 75.4 exllamav3, 62.7 llama.cpp no-MTP) and the strongest prefill at short
-   prompts (1 770 tok/s at 4k, 1 963 at 16k). Its expert-profile-driven hot cache
-   pays off hard on RDNA4.
-2. **Long-context decode flips to exllamav3.** exllamav3's decode is the flattest
-   (75.4 → 50.0 at 128k, ~34% drop) and beats Polystrata at 16k (85.4 vs
-   84.5) and from 64k on (61.1 vs 58.5 … 50.0 vs 43.2); Polystrata still leads at 32k
-   (74.6 vs 67.8). Polystrata has the steepest slope (92.7 → 43.2, ~53% drop),
-   consistent with its KV-heavy `--kv-whole` policy at long context.
-3. **Prefill scaling:** exllamav3 holds ~1.2–1.4k tok/s out to 128k (1 214),
-   better than anyone else there; Polystrata degrades from 1 963 (16k) to 710
-   (128k); llama.cpp is the slowest prefill measured (966 at 4k, 1 032 at 16k only
-   two lengths; MTP 824/881).
-4. **MTP makes llama.cpp slower, not faster, in this stack.** With MTP the no-MTP
-   baseline is beaten on prefill (824/881 vs 966/1 032 tok/s) and on decode
-   (52.5 vs 62.7 tok/s short context; 50.8 vs 57.0 at 16k) — the CPU-side
-   speculation cost outweighs draft acceptance at 30 CPU-resident experts.
+1. **Short context: exllamav3 and Polystrata are effectively tied** — 94.0 vs
+   93.9 tok/s short-context decode, 92.3 vs 91.1 at 4k, with the 94.0/92.3 edge in
+   exllamav3. Polystrata keeps the strongest prefill at short prompts (1 723 tok/s
+   at 4k, 1 938 at 16k).
+2. **Long-context decode is exllamav3's, by a widening margin.** Its slope is the
+   flattest (94.0 → 57.3 at 128k, ~39% drop) and it leads from 16k on (104.5 vs
+   83.0) through 128k (57.3 vs 41.1). Polystrata has the steepest slope (93.9 →
+   41.1, ~56% drop), consistent with its KV-heavy `--kv-whole` policy at long
+   context. llama.cpp is the slowest decode at every context (62.6 → 35.0), with
+   a mid slope (~44% drop).
+3. **Prefill scaling:** exllamav3 is the best prefill from 64k up (1 279 →
+   1 168, very flat) and second at 4k–32k; Polystrata leads 4k–32k (1 723 /
+   1 938 / 1 605) but degrades to 709 at 128k; llama.cpp now covers all six
+   lengths — a flat ~1.0k tok/s at 4k–32k (965/1 033/1 003) easing to 831 at 128k,
+   the slowest measured (MTP 824/881 at 4k/16k).
+4. **MTP makes llama.cpp slower, not faster, in this stack** (earlier 19:56Z run, 4k/16k only;
+   not re-run). With MTP the no-MTP baseline is beaten on prefill (824/881 vs
+   965/1 033 tok/s) and on decode (52.5 vs 62.6 tok/s short context; 50.8 vs 57.0
+   at 16k) — the CPU-side speculation cost outweighs draft acceptance at 30
+   CPU-resident experts.
 5. **Hot cache benefit is real where it exists.** llama.cpp's 4 096 MiB
-   `--moe-cache-mib` keeps decode within ~6 tok/s of the short-prompt numbers at
-   4k/16k; exllamav3 sits at 74.9 at 4k (short: 75.4). Polystrata stays within
-   ~9 tok/s through 16k before its long-context slope takes over.
+   `--moe-cache-mib` keeps decode at 62.3 at 4k and 57.0 at 16k (short: 62.6)
+   before falling off past 32k (52.1); exllamav3 holds 92.3 at 4k (short: 94.0)
+   and even runs hotter at 16k (104.5); Polystrata stays within ~3 tok/s at 4k
+   then drops to 83.0 at 16k.
 
 ## Caveats
 
-- Two exllamav3 runs exist: 14:51Z and 15:59Z. Tables use the **15:59Z run**
-  (DFlash2 draft config, full 128k coverage). The earlier 14:51Z run delivered
-  ~35 tok/s short-context decode and rejected the 128k prompt — the ~2× decode
-  gap between the two runs needs a written explanation before either can be
-  called canonical.
-- exllamav3 15:59Z TTFT is noisy at short prompts: 4k samples 3.4–8.1 s, 16k
-  11.3–23.1 s, so its 670 tok/s (4k) prefill partially reflects that variance.
-- Medians over ≤5 runs; a few runs ended early (`finish_reason: stop`) and are
-  flagged in the JSON files; medians include them.
+- Three exllamav3 runs exist: 14:51Z, 15:59Z and 20:53Z. Tables use the
+  **20:53Z run** (DFlash2 draft config, full 128k coverage, 94.0 tok/s short
+  decode). The 14:51Z run delivered ~35 tok/s short-context decode and rejected
+  the 128k prompt; the 15:59Z run reached 75.4 tok/s. The ~3× spread across the
+  three runs still needs a written explanation before the 20:53Z numbers are
+  settled as canonical.
+- The llama.cpp MTP column is the **19:56Z run (4k/16k only)** and was not
+  re-run, so it cannot be compared beyond 16k; its decode at 4k (58.1) is also
+  noisier than the no-MTP runs.
+- Early-stop runs (`finish_reason: stop`) pulled into medians: llama.cpp 21:38Z
+  at 96k (both runs, 140/170 tokens), exllamav3 20:53Z at 32k (2 of 5 runs, 244
+  and 245 tokens), Polystrata 21:13Z at 64k (1 of 5, 162 tokens) and 128k (1 of 2,
+  391 tokens).
+- Medians over ≤5 runs (96k/128k rest on 2); flagged in the JSON files.
 - Token-count checks (`prompt_tokens unchecked`) apply to all engines; benchmark
   prompts are synthetic corpus text.
 - Each engine uses a different quantization (APEX GGUF vs EXL3 4.00 bpw), so
@@ -165,8 +176,11 @@ the llm-bench protocol above.
 
 ## Raw results
 
-- `exllamav3-20261111T155934Z-ornith-1-5-35b-a3b-exl3-4-00bpw-24gb.json` (canonical)
-- `exllamav3-20261111T145111Z-ornith-1-5-35b-a3b-exl3-4-00bpw-24gb.json` (stale run)
-- `llamacpp-ornith-1-5-35b-a3b-apex-i-quality-no-mtp.json`
-- `llamacpp-ornith-1-5-35b-a3b-apex-i-quality-mtp.json`
-- `polystrata-ornith-1-5-35b-a3b-apex-i-quality.json`
+- `exllamav3-20261111T205345Z-ornith-1-5-35b-a3b-exl3-4-00bpw-24gb.json` (canonical)
+- `llamacpp-20261111T213807Z-ornith-1-5-35b-a3b-apex-i-quality-no-mtp.json` (canonical)
+- `polystrata-20261111T211316Z-ornith-1-5-35b-a3b-apex-i-quality.json` (canonical)
+- `llamacpp-ornith-1-5-35b-a3b-apex-i-quality-mtp.json` (MTP result, earlier 19:56Z run)
+- `exllamav3-20261111T155934Z-ornith-1-5-35b-a3b-exl3-4-00bpw-24gb.json` (superseded)
+- `exllamav3-20261111T145111Z-ornith-1-5-35b-a3b-exl3-4-00bpw-24gb.json` (stale run, ~35 tok/s short decode)
+- `llamacpp-ornith-1-5-35b-a3b-apex-i-quality-no-mtp.json` (superseded, earlier 19:45Z run, 4k/16k only)
+- `polystrata-ornith-1-5-35b-a3b-apex-i-quality.json` (superseded, earlier 15:36Z run)
