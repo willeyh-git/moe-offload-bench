@@ -44,6 +44,8 @@ inference engines on RDNA4 (Radeon 9070 XT).
 Full configs: [`LLAMA_CPP_CONF.md`](LLAMA_CPP_CONF.md),
 [`EXLLAMAV3_CONF.md`](EXLLAMAV3_CONF.md), [`POLYSTRATA_CONF.md`](POLYSTRATA_CONF.md).
 
+llama.cpp flag --moe-cache-cpu-share is not provided. Saw no immediate gains, see moe-cache-mib.md for numbers. 
+
 ### Engine binaries / sources
 
 | Engine | Source | Commit used |
