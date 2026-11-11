@@ -31,7 +31,7 @@ for ax, data, title in ((ax1, prefill, "Prefill throughput (tok/s)"),
         ax.plot(xs, ys, marker="o", label=name, color=colors[name], lw=1.8, ms=5)
     ax.set_title(title)
     ax.grid(True, alpha=0.25)
-    ax.legend(loc="lower right", ncol=2, fontsize=9, framealpha=0.9)
+    ax.legend(loc="upper right", ncol=2, fontsize=9, framealpha=0.9)
 
 ax2.set_xticks([0.02, 16, 32, 48, 64, 80, 96, 112, 128])
 ax2.set_xticklabels(["~16", "16k", "32k", "48k", "64k", "80k", "96k", "112k", "128k"])
