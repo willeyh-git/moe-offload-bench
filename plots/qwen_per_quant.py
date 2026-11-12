@@ -65,7 +65,7 @@ quants = {
 # draw order, color, line style
 order = ["none", "MTP", "DFlash2", "MTP (2 drafts)", "DFlash2 (2 drafts)"]
 colors = {"none": "#2ca02c", "MTP": "#e00080", "DFlash2": "#1f77b4",
-          "MTP (2 drafts)": "#e00080", "DFlash2 (2 drafts)": "#1f77b4"}
+          "MTP (2 drafts)": "#c0392b", "DFlash2 (2 drafts)": "#ff7f0e"}
 styles = {"none": "-", "MTP": "-", "DFlash2": "-",
           "MTP (2 drafts)": "--", "DFlash2 (2 drafts)": "--"}
 
@@ -83,11 +83,15 @@ for q in quants.values():
                 continue
             # decode includes the short-context point; prefill starts at 4k
             xs = q["xs"][:len(data[line])] if ax is ax2 else q["xs"][1:1 + len(data[line])]
-            ax.plot(xs, data[line], marker="o", label=q["labels"].get(line, line),
+            # aside (2 drafts) lines: dashed + distinct marker + distinct color
+            marker = "s" if "(2 drafts)" in line else "o"
+            ax.plot(xs, data[line], marker=marker, label=q["labels"].get(line, line),
                     color=colors[line], ls=styles[line], lw=1.8, ms=5)
         ax.set_title(title)
         ax.grid(True, alpha=0.25)
         ax.legend(loc="upper right", fontsize=9, framealpha=0.9)
+        for h, t in zip(*ax.get_legend_handles_labels()):
+            print(q["out"], t, h.get_color(), h.get_linestyle())
     ax2.set_xticks(q["xs"])
     ax2.set_xticklabels(xtick_labels(q["xs"]))
     ax2.set_xlabel("Prompt / context length")

@@ -165,9 +165,9 @@ Comparison (MTP vs DFlash2, both 2 draft tokens):
 ## Throughput graphs
 
 One figure per quant (prefill on top, decode below — short-context decode
-plotted at the left edge). In the 4.00 bpw figure, the **dashed lines are the
-aside runs** with 2 draft tokens (magenta = MTP 11:20Z, blue = DFlash2
-11:44Z), full range to 126k.
+plotted at the left edge). In the 4.00 bpw figure, the **dashed lines with
+square markers are the aside runs** with 2 draft tokens (red = MTP 11:20Z,
+orange = DFlash2 11:44Z), full range to 126k.
 
 **4.00 bpw**
 
