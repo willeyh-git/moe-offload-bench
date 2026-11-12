@@ -3,22 +3,26 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 # Qwen3.6-35B-A3B on ExLlamaV3 (Radeon 9070 XT), 2026-11-12 runs.
-# One figure per quant; 3 spec modes each (none / MTP / DFlash2).
+# One figure per quant; 3 spec modes each (none / MTP / DFlash2), plus an
+# aside "MTP (2 drafts)" run for 4.00 bpw (11:20Z, draft tokens 2,
+# cpu_moe_split_experts 95, full range) drawn dashed.
 # Short-context decode (~90 prompt tokens) plotted at x=0.09.
 quants = {
     "q4": {
         "title": "Qwen3.6-35B-A3B — 4.00 bpw (yeasah)",
         "out": "qwen3.6-4.00bpw.png",
-        "xs": [0.09, 4, 16, 32],
+        "xs": [0.09, 4, 16, 32, 64, 96, 126],
         "prefill": {
-            "none":     [1643.1, 1657.3, 1612.2],
-            "MTP":      [1380.3, 1433.5, 1402.4],
-            "DFlash2":  [1307.0, 1370.0, 1361.0],
+            "none":      [1643.1, 1657.3, 1612.2],
+            "MTP":       [1380.3, 1433.5, 1402.4],
+            "DFlash2":   [1307.0, 1370.0, 1361.0],
+            "MTP (2 drafts)": [1419.8, 1473.0, 1438.6, 1351.7, 1273.3, 1211.2],
         },
         "decode": {
-            "none":     [77.5, 76.8, 74.2, 71.5],
-            "MTP":      [102.3, 102.8, 101.0, 98.0],
-            "DFlash2":  [113.0, 105.2, 98.4, 92.2],
+            "none":      [77.5, 76.8, 74.2, 71.5],
+            "MTP":       [102.3, 102.8, 101.0, 98.0],
+            "DFlash2":   [113.0, 105.2, 98.4, 92.2],
+            "MTP (2 drafts)": [112.8, 113.2, 105.0, 100.7, 93.6, 91.7, 83.3],
         },
     },
     "q5": {
@@ -53,8 +57,11 @@ quants = {
     },
 }
 
-labels = {"none": "no spec", "MTP": "MTP", "DFlash2": "DFlash2 draft"}
-colors = {"none": "#2ca02c", "MTP": "#e00080", "DFlash2": "#1f77b4"}
+# draw order, color, line style
+order = ["none", "MTP", "DFlash2", "MTP (2 drafts)"]
+colors = {"none": "#2ca02c", "MTP": "#e00080", "DFlash2": "#1f77b4",
+          "MTP (2 drafts)": "#e00080"}
+styles = {"none": "-", "MTP": "-", "DFlash2": "-", "MTP (2 drafts)": "--"}
 
 
 def xtick_labels(xs):
@@ -65,11 +72,13 @@ for q in quants.values():
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(8, 8.5), sharex=True)
     for ax, data, title in ((ax1, q["prefill"], "Prefill throughput (tok/s)"),
                             (ax2, q["decode"], "Decode throughput (tok/s, median)")):
-        for line in ["none", "MTP", "DFlash2"]:
+        for line in order:
+            if line not in data:
+                continue
             # decode includes the short-context point; prefill starts at 4k
-            xs = q["xs"] if ax is ax2 else q["xs"][1:1 + len(data[line])]
-            ax.plot(xs, data[line], marker="o", label=labels[line],
-                    color=colors[line], lw=1.8, ms=5)
+            xs = q["xs"][:len(data[line])] if ax is ax2 else q["xs"][1:1 + len(data[line])]
+            ax.plot(xs, data[line], marker="o", label=line,
+                    color=colors[line], ls=styles[line], lw=1.8, ms=5)
         ax.set_title(title)
         ax.grid(True, alpha=0.25)
         ax.legend(loc="upper right", fontsize=9, framealpha=0.9)

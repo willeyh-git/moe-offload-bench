@@ -1,9 +1,11 @@
 # Qwen3.6-35B-A3B — EXL3 quants on ExLlamaV3 (Radeon 9070 XT)
 
-Nine runs, all dated 2026-11-12: three EXL3 quantizations (4.00, 5.00 and 6.00
+Ten runs, all dated 2026-11-12: three EXL3 quantizations (4.00, 5.00 and 6.00
 bpw -hb6), each benchmarked three ways — no speculation, MTP (drafts from the
-model's own MTP layers), and a separate DFlash2 draft. Prefill/decode lengths:
-4k, 16k for all runs; 32k only for the 4.00 bpw runs.
+model's own MTP layers), and a separate DFlash2 draft — plus one aside:
+a full-range 4.00 bpw MTP run with 2 draft tokens. Prefill/decode lengths:
+4k and 16k for all runs; 32k for the 4.00 bpw set (the aside run extends to
+126k).
 
 ## Sources
 
@@ -33,6 +35,7 @@ penalties 0.
 
 | Time (UTC) | Quant | Spec mode | `cpu_moe_split_experts` | VRAM |
 | --- | --- | --- | ---: | --- |
+| 11:20:00 | 4.00 bpw | MTP (2 draft tokens) — aside | 95 | ~15.4 GB |
 | 11:02:24 | 4.00 bpw | none | 90 | ~15.4 GB |
 | 10:56:11 | 4.00 bpw | MTP (5 draft tokens) | 100 | ~15.4 GB |
 | 10:50:07 | 4.00 bpw | DFlash2 (5 draft tokens) | 100 | ~15.4 GB |
@@ -46,7 +49,7 @@ penalties 0.
 ### Draft configs (as run)
 
 MTP (draft comes from the main quant's MTP layers; no separate draft model —
-4 draft tokens for the 5.00/6.00 bpw runs, 5 for 4.00 bpw):
+`draft_num_tokens` varied per run: 2, 4 or 5 — see the table):
 
 ```yaml
 draft_model:
@@ -105,10 +108,35 @@ draft_model:
 | **6.00 bpw** 16 000 | 67.2 (65.9–67.6) | 82.4 (75.7–84.2) | **88.5** (85.1–98.0) |
 | **6.00 bpw** 32 000 | — | — | — |
 
+## Aside — 4.00 bpw, MTP with 2 draft tokens (11:20Z, full range)
+
+Follow-up 4.00 bpw MTP run with `draft_num_tokens: 2` (was 5) and
+`cpu_moe_split_experts: 95`, extending prefill and decode out to 126k:
+
+| Prompt length | Prefill tok/s (TTFT s) | Decode tok/s (median, min–max) |
+| ---: | --- | --- |
+| ~90 (short) | — | 112.8 (110.5–116.4) |
+| 4 000 | 1 419.8 (2.92) | 113.2 (107.2–115.6) |
+| 16 000 | 1 473.0 (11.06) | 105.0 (101.1–110.9) |
+| 32 000 | 1 438.6 (22.73) | 100.7 (98.3–101.4) |
+| 64 000 | 1 351.7 (48.37) | 93.6 (89.8–96.1) |
+| 96 000 | 1 273.3 (77.37) | 91.7 (90.9–92.5) † |
+| 126 000 | 1 211.2 (106.5) | 83.3 (83.2–83.5) † |
+
+(† median over 2 runs; no early-stop runs seen.)
+
+- Dropping draft tokens 5 → 2 raised both prefill and decode vs the earlier
+  4.00 bpw MTP run: prefill 1 420/1 473/1 439 vs 1 380/1 434/1 402 at
+  4k/16k/32k; decode 112.8 short (vs 102.3, +10%) and 100.7 at 32k (vs 98.0).
+- At 32k it now beats the DFlash2 draft (100.7 vs 92.2).
+- Long-context slope: 112.8 → 93.6 (64k, ~17%) → 83.3 (126k, ~26%) — the
+  flattest decode slope of any line reaching this range.
+
 ## Throughput graphs
 
 One figure per quant (prefill on top, decode below — short-context decode
-plotted at the left edge).
+plotted at the left edge). In the 4.00 bpw figure, the **dashed magenta line
+is the 11:20Z MTP aside run** (2 draft tokens, full range to 126k).
 
 **4.00 bpw**
 
@@ -154,18 +182,20 @@ Generated with [`plots/qwen_per_quant.py`](plots/qwen_per_quant.py)
 
 ## Caveats
 
-- 32k context (prefill + decode) was only run for the 4.00 bpw quants;
-  5.00/6.00 bpw and anything past 32k is still outstanding.
+- Only the 4.00 bpw aside run reached beyond 32k; 32k+ is still outstanding
+  for the other 4.00 bpw runs and for 5.00/6.00 bpw.
+- The 96k/126k decode medians rest on 2 runs († in the aside table).
 - `cpu_moe_split_experts` differs per run (90/100/100 for 4.00, 125/135/135 for
   5.00, 145/150/155 for 6.00): draft variants load extra weights, so absolute
   numbers across modes conflate offload level with speculation. MTP
-  `draft_num_tokens` also varied (5 for 4.00 bpw, 4 for 5.00/6.00).
+  `draft_num_tokens` also varied per run (2, 4, 5); DFlash2 runs all used 5.
 - `prompt_tokens unchecked` flag applies to all runs
   ("non-Qwen model" at 4k/16k, "no reference count" at 32k).
 - Medians over 5 runs each; no early-stop runs were seen.
 
 ## Raw results
 
+- `exllamav3-20261112T112000Z-q4-exl3-4-00bpw.json` (4.00 bpw, MTP 2 draft tokens — aside, full range)
 - `exllamav3-20261112T110224Z-q4-exl3-4-00bpw.json` (4.00 bpw, no spec)
 - `exllamav3-20261112T105611Z-q4-exl3-4-00bpw.json` (4.00 bpw, MTP)
 - `exllamav3-20261112T105007Z-q4-exl3-4-00bpw.json` (4.00 bpw, DFlash2)
