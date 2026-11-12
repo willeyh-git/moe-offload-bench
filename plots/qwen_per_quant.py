@@ -3,9 +3,9 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 # Qwen3.6-35B-A3B on ExLlamaV3 (Radeon 9070 XT), 2026-11-12 runs.
-# One figure per quant; 3 spec modes each (none / MTP / DFlash2), plus an
-# aside "MTP (2 drafts)" run for 4.00 bpw (11:20Z, draft tokens 2,
-# cpu_moe_split_experts 95, full range) drawn dashed.
+# One figure per quant; 3 spec modes each (none / MTP / DFlash2), plus
+# full-range aside runs with 2 draft tokens (dashed): MTP 11:20Z @4.00,
+# DFlash2 11:44Z @4.00, MTP 12:49Z @5.00, DFlash2 12:19Z @5.00.
 # Short-context decode (~90 prompt tokens) plotted at x=0.09.
 quants = {
     "q4": {
@@ -36,6 +36,7 @@ quants = {
         "prefill": {
             "none":     [1218.5, 1228.1],
             "MTP":      [1051.9, 1090.9],
+            "MTP (2 drafts)": [1089.1, 1120.0, 1101.0, 1047.9, 998.5, 958.2],
             "DFlash2":  [1060.9, 1093.5],
             "DFlash2 (2 drafts)": [1128.0, 1155.0, 1129.9, 1074.1, 1011.3, 978.2],
         },
@@ -44,6 +45,7 @@ quants = {
             "MTP":      [96.4, 96.5, 89.1],
             "DFlash2":  [79.1, 87.3, 77.8],
             "DFlash2 (2 drafts)": [98.7, 99.2, 94.0, 86.6, 80.5, 76.1, 67.2],
+            "MTP (2 drafts)": [96.1, 97.2, 94.9, 85.6, 81.6, 80.0, 75.7],
         },
     },
     "q6": {
