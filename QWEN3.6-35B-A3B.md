@@ -105,6 +105,26 @@ draft_model:
 | **6.00 bpw** 16 000 | 67.2 (65.9–67.6) | 82.4 (75.7–84.2) | **88.5** (85.1–98.0) |
 | **6.00 bpw** 32 000 | — | — | — |
 
+## Throughput graphs
+
+One figure per quant (prefill on top, decode below — short-context decode
+plotted at the left edge).
+
+**4.00 bpw**
+
+![Qwen3.6 4.00 bpw plots](plots/qwen3.6-4.00bpw.png)
+
+**5.00 bpw**
+
+![Qwen3.6 5.00 bpw plots](plots/qwen3.6-5.00bpw.png)
+
+**6.00 bpw**
+
+![Qwen3.6 6.00 bpw plots](plots/qwen3.6-6.00bpw.png)
+
+Generated with [`plots/qwen_per_quant.py`](plots/qwen_per_quant.py)
+(`uv run --with matplotlib python qwen_per_quant.py`).
+
 ## Findings
 
 1. **Speculation is a big decode win on this model/engine** — unlike the
