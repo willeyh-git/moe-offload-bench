@@ -3,6 +3,38 @@
 Exploring MoE expert CPU offloading and hot expert caches across different
 inference engines on RDNA4 (Radeon 9070 XT).
 
+## Goal
+
+Run MoE models that do **not** fit in the GPU's 16 GB of VRAM at **at least
+128K context**, with **prefill over 1 500 tok/s** and **decode over 100 tok/s**.
+The idea is to offload some experts to CPU with as small a performance hit as
+possible — it will obviously never match a fully GPU-resident model, but the
+goal is to stay in the same ballpark. Everything here is on the lesser-optimized
+AMD ROCm stack, where the gap between systems is widest.
+
+Decisions already made along the way:
+
+- Main KV cache at Q8 to leave VRAM headroom; draft cache at Q4.
+- CPU-resident experts are the offload unit (llama.cpp `--n-cpu-moe`, exllamav3
+  `cpu_moe_split_experts`), with per-engine hot-expert caches where available.
+
+### Notable findings so far
+
+- **Polystrata/Strata pegs the GPU hardest** — it runs the 9070 XT at its
+  power limit (300 W), while llama.cpp and exllamav3 only reach ~150–200 W.
+  Despite that, the CPU-side decode speed is not noticeably worse than on
+  Polystrata/Strata, so llama.cpp/exllamav3 deliver the best absolute
+  watts-per-token.
+- **On the original Strata engine, throughput degrades badly as context
+  grows** for the heavier models (Ornith Polystrata prefill falls 1 723 →
+  709 tok/s from 4k→128k; Strata Unsloth Qwen3.6 decode collapses 59.4 → 9.3
+  tok/s over the same range). The Flash Next Coder keeping a consistent ~1 550
+  tok/s prefill all the way to 128k is quite impressive in comparison.
+- **Cache tweaks help only modestly**: llama.cpp's 4 096 MiB hot-expert cache
+  (`--moe-cache-mib`) gives small gains (decode holds to ~16k before falling
+  off), and the CPU-decode share flag (`--moe-cache-cpu-share`) did not
+  improve decode noticeably — numbers in [moe-cache.md](moe-cache.md).
+
 ## System
 
 | Component | Spec |
@@ -40,21 +72,21 @@ Per-model results live in their own files:
 Engine config docs: [`LLAMA_CPP_CONF.md`](LLAMA_CPP_CONF.md),
 [`EXLLAMAV3_CONF.md`](EXLLAMAV3_CONF.md), [`POLYSTRATA_CONF.md`](POLYSTRATA_CONF.md).
 
-## Best Q4-class combo per model (128k)
+## Best ~Q4 engine combo per model at 128k
 
 Same layout as the per-model plots — prefill on top, decode below — with one
-line per model: the winning combo only (highest total of prefill@128k +
-decode@128k among runs that reached 128k). No other engines are plotted.
+line per model: the winning combo only (highest total of prefill + decode at
+128k, among runs that reached 128k). No other engines are plotted.
 Q4-class quants for Ornith (APEX GGUF / EXL3 4.00 bpw) and Qwen3.6 (EXL3 4.00
 bpw / UD Q4_K_XL GGUF); QFn Coder is IQ1_M, included for reference.
 
 ![Best Q4-class combo per model at 128k](plots/best_q4_128k.png)
 
-| Model | Winner (quant / engine) | Prefill @128k | Decode @128k | Total |
-| --- | --- | ---: | ---: | ---: |
-| Ornith 1.5 35B-A3B | EXL3 4.0 bpw, DFlash2 / exllamav3 | 1 168 tok/s | 57.3 tok/s | **1 225 tok/s** |
-| Qwen3.6-35B-A3B | EXL3 4.0 bpw, DFlash2 (2 drafts) / exllamav3 | 1 246 tok/s | 71.6 tok/s | **1 317 tok/s** |
-| Qwen3.8-Flash-Next Coder | IQ1_M / Polystrata nov-7 `--spec 2` | 1 572 tok/s | 44.0 tok/s | **1 616 tok/s** |
+| Model | Winner (quant / engine) | Prefill @128k | Decode @128k |
+| --- | --- | ---: | ---: |
+| Ornith 1.5 35B-A3B | EXL3 4.0 bpw, DFlash2 / exllamav3 | 1 168 tok/s | 57.3 tok/s |
+| Qwen3.6-35B-A3B | EXL3 4.0 bpw, DFlash2 (2 drafts) / exllamav3 | 1 246 tok/s | 71.6 tok/s |
+| Qwen3.8-Flash-Next Coder | IQ1_M / Polystrata nov-7 `--spec 2` | 1 572 tok/s | 44.0 tok/s |
 
 Excluded for not reaching 128k: llama.cpp Qwen3.6 runs and the exllamav3
 short-range Qwen3.6 runs (~32k max). QFn Coder has a single eligible run, so
