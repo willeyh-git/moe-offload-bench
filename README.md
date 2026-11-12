@@ -42,11 +42,11 @@ Engine config docs: [`LLAMA_CPP_CONF.md`](LLAMA_CPP_CONF.md),
 
 ## Best Q4-class combo per model (128k)
 
-One bar per model in two panels — prefill and decode at 128k — showing only the
-winning combo (highest total of prefill@128k + decode@128k, eligible runs must
-reach 128k). Legend: model / quant / engine. Q4-class quants for Ornith (APEX
-GGUF / EXL3 4.00 bpw) and Qwen3.6 (EXL3 4.00 bpw / UD Q4_K_XL GGUF); QFn Coder
-is IQ1_M, included for reference.
+Same layout as the per-model plots — prefill on top, decode below — with one
+line per model: the winning combo only (highest total of prefill@128k +
+decode@128k among runs that reached 128k). No other engines are plotted.
+Q4-class quants for Ornith (APEX GGUF / EXL3 4.00 bpw) and Qwen3.6 (EXL3 4.00
+bpw / UD Q4_K_XL GGUF); QFn Coder is IQ1_M, included for reference.
 
 ![Best Q4-class combo per model at 128k](plots/best_q4_128k.png)
 
