@@ -40,6 +40,25 @@ Per-model results live in their own files:
 Engine config docs: [`LLAMA_CPP_CONF.md`](LLAMA_CPP_CONF.md),
 [`EXLLAMAV3_CONF.md`](EXLLAMAV3_CONF.md), [`POLYSTRATA_CONF.md`](POLYSTRATA_CONF.md).
 
+## Best Q4-class combo per model (128k)
+
+One panel per model, Q4-class quants only (Ornith: APEX GGUF / EXL3 4.00 bpw; Qwen3.6: EXL3 4.00 bpw / UD Q4_K_XL GGUF). A run must reach 128k to be eligible; the combo with the **highest total of prefill@128k + decode@128k (tok/s)** wins (black, bold total; others greyed). Qwen3.8-Flash-Next Coder is included for reference although it is IQ1_M, not Q4.
+
+![Best Q4-class combo per model at 128k](plots/best_q4_128k.png)
+
+| Model | Winner | Prefill @128k | Decode @128k | Total |
+| --- | --- | ---: | ---: | ---: |
+| Ornith 1.5 35B-A3B | exllamav3, EXL3 4.0 bpw + DFlash2 draft | 1 168 | 57.3 | **1 225** |
+| Qwen3.6-35B-A3B | exllamav3, EXL3 4.0 bpw + DFlash2 (2 drafts) | 1 246 | 71.6 | **1 317** |
+| Qwen3.8-Flash-Next Coder | Polystrata nov-7, `--spec 2` (IQ1_M) | 1 572 | 44.0 | **1 616** |
+
+Excluded for not reaching 128k: llama.cpp and exllamav3 short-range Qwen3.6
+runs (~32k max). QFn Coder has a single eligible run, so it is its own winner
+by default.
+
+Generated with [`plots/best_q4_128k.py`](plots/best_q4_128k.py)
+(`uv run --with matplotlib python best_q4_128k.py`).
+
 ## Raw results (master list)
 
 JSON files live under `results/`, grouped by model. Full annotations are in the
