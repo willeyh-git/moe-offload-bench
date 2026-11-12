@@ -11,7 +11,7 @@ quants = {
     "q4": {
         "title": "Qwen3.6-35B-A3B — 4.00 bpw (yeasah)",
         "out": "qwen3.6-4.00bpw.png",
-        "xs": [0.09, 4, 16, 32, 64, 96, 126],
+        "xs": [0.09, 4, 16, 32, 64, 96, 128],
         "labels": {"MTP": "MTP (5 drafts)", "DFlash2": "DFlash2 (5 drafts)"},
         "prefill": {
             "none":      [1643.1, 1657.3, 1612.2],
@@ -31,7 +31,7 @@ quants = {
     "q5": {
         "title": "Qwen3.6-35B-A3B — 5.00 bpw (yeasah)",
         "out": "qwen3.6-5.00bpw.png",
-        "xs": [0.09, 4, 16, 32, 64, 96, 126],
+        "xs": [0.09, 4, 16, 32, 64, 96, 128],
         "labels": {"MTP": "MTP (4 drafts)", "DFlash2": "DFlash2 (5 drafts)"},
         "prefill": {
             "none":     [1218.5, 1228.1],
@@ -65,31 +65,35 @@ quants = {
         },
     },
     "gguf": {
-        "title": "Qwen3.6-35B-A3B — UD Q4_K_XL GGUF (llama.cpp / PolyStrata)",
+        "title": "Qwen3.6-35B-A3B — UD Q4_K_XL GGUF (llama.cpp / Strata / PolyStrata)",
         "out": "qwen3.6-gguf-ud-q4-k-xl.png",
-        "sub": "llama.cpp (MTP 3 drafts / no drafter) and PolyStrata, Radeon 9070 XT (2026-11-12)",
-        "xs": [0.09, 4, 16, 32, 64],
+        "sub": "llama.cpp (MTP 3 drafts / no drafter), Strata (Unsloth GGUF), PolyStrata (full) — Radeon 9070 XT (2026-11-12)",
+        "xs": [0.09, 4, 16, 32, 64, 96, 128],
         "labels": {"none": "llama.cpp (no drafter)",
                    "MTP": "llama.cpp MTP (3 drafts)",
-                   "DFlash2": "PolyStrata"},
+                   "DFlash2": "Strata (Unsloth GGUF)",
+                   "PolyStrata": "PolyStrata (full)"},
         "prefill": {
             "none":    [1058.3, 1129.9, 1089.2],
             "MTP":     [941.1, 1006.2, 967.8],
-            "DFlash2": [1962.1, 2144.1, 1602.2, 1198.0],
+            "DFlash2": [1799.1, 1666.6, 1285.2, 767.8, 547.7, 397.9],
+            "PolyStrata": [1885.6, 2124.3, 1725.2, 1194.3, 896.9, 733.7],
         },
         "decode": {
             "none":    [63.4, 62.3, 57.6, 53.1],
             "MTP":     [113.5, 96.0, 91.3, 103.1],
-            "DFlash2": [136.0, 142.7, 122.2, 107.7, 85.8],
+            "DFlash2": [59.4, 45.3, 33.7, 15.8, 11.7, 9.3],
+            "PolyStrata": [141.5, 121.3, 108.1, 85.8, 71.7, 62.0],
         },
     },
 }
 
 # draw order, color, line style
-order = ["none", "MTP", "DFlash2", "MTP (2 drafts)", "DFlash2 (2 drafts)"]
+order = ["none", "MTP", "DFlash2", "PolyStrata", "MTP (2 drafts)", "DFlash2 (2 drafts)"]
 colors = {"none": "#2ca02c", "MTP": "#e00080", "DFlash2": "#1f77b4",
+          "PolyStrata": "#9467bd",
           "MTP (2 drafts)": "#c0392b", "DFlash2 (2 drafts)": "#ff7f0e"}
-styles = {"none": "-", "MTP": "-", "DFlash2": "-",
+styles = {"none": "-", "MTP": "-", "DFlash2": "-", "PolyStrata": "-",
           "MTP (2 drafts)": "--", "DFlash2 (2 drafts)": "--"}
 
 
@@ -104,8 +108,18 @@ for q in quants.values():
         for line in order:
             if line not in data:
                 continue
-            # decode includes the short-context point; prefill starts at 4k
-            xs = q["xs"][:len(data[line])] if ax is ax2 else q["xs"][1:1 + len(data[line])]
+            # decode includes the short-context point except full-range-only
+            # lines (Strata / PolyStrata), which start at 4k
+            n = len(data[line])
+            if ax is ax2:
+                if n == len(q["xs"]):
+                    xs = q["xs"]
+                elif n == len(q["xs"]) - 1:
+                    xs = q["xs"][1:]
+                else:
+                    xs = q["xs"][:n]
+            else:
+                xs = q["xs"][1:1 + n]
             # aside (2 drafts) lines: dashed + distinct marker + distinct color
             marker = "s" if "(2 drafts)" in line else "o"
             ax.plot(xs, data[line], marker=marker, label=q["labels"].get(line, line),
