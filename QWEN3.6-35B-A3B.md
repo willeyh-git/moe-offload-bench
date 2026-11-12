@@ -1,11 +1,11 @@
 # Qwen3.6-35B-A3B — EXL3 quants on ExLlamaV3 (Radeon 9070 XT)
 
-Ten runs, all dated 2026-11-12: three EXL3 quantizations (4.00, 5.00 and 6.00
-bpw -hb6), each benchmarked three ways — no speculation, MTP (drafts from the
-model's own MTP layers), and a separate DFlash2 draft — plus one aside:
-a full-range 4.00 bpw MTP run with 2 draft tokens. Prefill/decode lengths:
-4k and 16k for all runs; 32k for the 4.00 bpw set (the aside run extends to
-126k).
+Eleven runs, all dated 2026-11-12: three EXL3 quantizations (4.00, 5.00 and
+6.00 bpw -hb6), each benchmarked three ways — no speculation, MTP (drafts from
+the model's own MTP layers), and a separate DFlash2 draft — plus two asides:
+full-range 4.00 bpw MTP and DFlash2 runs, both with 2 draft tokens.
+Prefill/decode lengths: 4k and 16k for all runs; 32k for the 4.00 bpw set
+(the aside runs extend to 126k).
 
 ## Sources
 
@@ -35,7 +35,8 @@ penalties 0.
 
 | Time (UTC) | Quant | Spec mode | `cpu_moe_split_experts` | VRAM |
 | --- | --- | --- | ---: | --- |
-| 11:20:00 | 4.00 bpw | MTP (2 draft tokens) — aside | 95 | ~15.4 GB |
+| 11:44:37 | 4.00 bpw | DFlash2 (2 draft tokens) — aside | 100 | ~15.6 GB |
+| 11:20:00 | 4.00 bpw | MTP (2 draft tokens) — aside | 95 | ~15.7 GB |
 | 11:02:24 | 4.00 bpw | none | 90 | ~15.4 GB |
 | 10:56:11 | 4.00 bpw | MTP (5 draft tokens) | 100 | ~15.4 GB |
 | 10:50:07 | 4.00 bpw | DFlash2 (5 draft tokens) | 100 | ~15.4 GB |
@@ -45,6 +46,9 @@ penalties 0.
 | 09:10:45 | 6.00 bpw | none | 145 | ~15.4 GB |
 | 09:15:48 | 6.00 bpw | MTP (4 draft tokens) | 150 | ~15.4 GB |
 | 09:39:39 | 6.00 bpw | DFlash2 (5 draft tokens) | 155 | ~15.2 GB |
+
+(The MTP aside used `cpu_moe_split_experts: 95` — the model did not load at
+100; the DFlash2 aside ran back at 100.)
 
 ### Draft configs (as run)
 
@@ -60,7 +64,8 @@ draft_model:
   draft_confidence: 0.4
 ```
 
-DFlash2 (separate 3.0 bpw draft, 5 draft tokens in all its runs):
+DFlash2 (separate 3.0 bpw draft; 5 draft tokens in the short-range runs, 2 in
+the aside run):
 
 ```yaml
 draft_model:
@@ -108,10 +113,30 @@ draft_model:
 | **6.00 bpw** 16 000 | 67.2 (65.9–67.6) | 82.4 (75.7–84.2) | **88.5** (85.1–98.0) |
 | **6.00 bpw** 32 000 | — | — | — |
 
-## Aside — 4.00 bpw, MTP with 2 draft tokens (11:20Z, full range)
+## Aside — 4.00 bpw, full range 4k → 126k (2 draft tokens)
 
-Follow-up 4.00 bpw MTP run with `draft_num_tokens: 2` (was 5) and
-`cpu_moe_split_experts: 95`, extending prefill and decode out to 126k:
+Two follow-up full-range 4.00 bpw runs, both with `draft_num_tokens: 2` —
+the first head-to-head comparison of the two draft modes at equal draft
+count:
+
+| Run | Mode | `cpu_moe_split_experts` | VRAM |
+| --- | --- | ---: | ---: |
+| 11:20:00Z | MTP | 95 | ~15.7 GB |
+| 11:44:37Z | DFlash2 | 100 | ~15.6 GB |
+
+### DFlash2 (11:44Z)
+
+| Prompt length | Prefill tok/s (TTFT s) | Decode tok/s (median, min–max) |
+| ---: | --- | --- |
+| ~90 (short) | — | 105.4 (100.7–106.0) |
+| 4 000 | 1 463.0 (2.83) | 107.0 (106.1–108.1) |
+| 16 000 | 1 534.3 (10.62) | 98.9 (97.3–102.0) |
+| 32 000 | 1 492.1 (21.91) | 93.0 (91.7–100.5) |
+| 64 000 | 1 398.3 (46.76) | 86.3 (79.1–88.1) |
+| 96 000 | 1 312.4 (75.07) | 80.1 (78.2–81.9) † |
+| 126 000 | 1 245.6 (103.56) | 71.6 (68.6–74.6) † |
+
+### MTP (11:20Z)
 
 | Prompt length | Prefill tok/s (TTFT s) | Decode tok/s (median, min–max) |
 | ---: | --- | --- |
@@ -123,20 +148,26 @@ Follow-up 4.00 bpw MTP run with `draft_num_tokens: 2` (was 5) and
 | 96 000 | 1 273.3 (77.37) | 91.7 (90.9–92.5) † |
 | 126 000 | 1 211.2 (106.5) | 83.3 (83.2–83.5) † |
 
-(† median over 2 runs; no early-stop runs seen.)
+(† median over 2 runs; no early-stop runs seen in either aside run.)
 
-- Dropping draft tokens 5 → 2 raised both prefill and decode vs the earlier
-  4.00 bpw MTP run: prefill 1 420/1 473/1 439 vs 1 380/1 434/1 402 at
-  4k/16k/32k; decode 112.8 short (vs 102.3, +10%) and 100.7 at 32k (vs 98.0).
-- At 32k it now beats the DFlash2 draft (100.7 vs 92.2).
-- Long-context slope: 112.8 → 93.6 (64k, ~17%) → 83.3 (126k, ~26%) — the
-  flattest decode slope of any line reaching this range.
+Comparison (MTP vs DFlash2, both 2 draft tokens):
+
+- **Decode: MTP leads the whole range** — 112.8 vs 105.4 short, 100.7 vs 93.0
+  at 32k, 83.3 vs 71.6 at 126k. The DFlash2 slope is steeper (−32% from
+  short to 126k; MTP −26%).
+- **Prefill: DFlash2 is ~3% faster everywhere** — 1 463/1 534/1 492 vs
+  1 420/1 473/1 439 at 4k/16k/32k; 1 246 vs 1 211 at 126k.
+- vs the 5-draft runs: dropping to 2 draft tokens lifted DFlash2 prefill
+  (1 463/1 534 vs 1 307/1 370 at 4k/16k) but cut its short-context decode
+  (105.4 vs 113.0); MTP gained on both (prefill 1 420/1 473 vs 1 380/1 434;
+  decode 112.8 vs 102.3).
 
 ## Throughput graphs
 
 One figure per quant (prefill on top, decode below — short-context decode
-plotted at the left edge). In the 4.00 bpw figure, the **dashed magenta line
-is the 11:20Z MTP aside run** (2 draft tokens, full range to 126k).
+plotted at the left edge). In the 4.00 bpw figure, the **dashed lines are the
+aside runs** with 2 draft tokens (magenta = MTP 11:20Z, blue = DFlash2
+11:44Z), full range to 126k.
 
 **4.00 bpw**
 
@@ -158,10 +189,11 @@ Generated with [`plots/qwen_per_quant.py`](plots/qwen_per_quant.py)
 1. **Speculation is a big decode win on this model/engine** — unlike the
    Ornith llama.cpp result where MTP slowed decode down. No-spec decode is
    ~67–78 tok/s; with a draft it climbs to ~78–113 across quants.
-2. **4.00 bpw + DFlash2 is the decode champion** — 113.0 short, 105.2 at 4k,
-   98.4 at 16k, 92.2 at 32k. It also produces the widest spreads of any draft
-   run (e.g. 32k: 84.5–101.3), so treat its lead as ~10–16% rather than the raw
-   gap at every point.
+2. **4.00 bpw + DFlash2 is the decode champion in the short-range set** —
+   113.0 short, 105.2 at 4k, 98.4 at 16k, 92.2 at 32k. It also produces the
+   widest spreads of any draft run (e.g. 32k: 84.5–101.3), so treat its lead
+   as ~10–16% rather than the raw gap at every point. (In the full-range
+   aside with 2 draft tokens, MTP leads DFlash2 at every context — see Aside.)
 3. **The best draft mode keeps flipping with quant — and with context.** At
    4.00 bpw, DFlash2 leads short/4k (113.0/105.2) but MTP takes over at 16k and
    32k (101.0/98.0 vs 98.4/92.2). At 5.00 bpw MTP leads everywhere (DFlash2 is
@@ -175,26 +207,29 @@ Generated with [`plots/qwen_per_quant.py`](plots/qwen_per_quant.py)
    (4.00) / 1 218 (5.00) / 996 tok/s (6.00), a ~65% spread for 2 bpw.
 7. **No-spec decode scales with quant size too**, more gently: 77.5 (4.00) /
    71.5 (5.00) / 68.8 (6.00) short-context.
-8. **VRAM is flat across the board** — ~15.1–15.4 GB for all nine runs
-   regardless of quant or spec mode.
+8. **VRAM is nearly flat** — ~15.1–15.4 GB for the short-range runs
+   regardless of quant or spec mode; the two 2 draft-token aside runs sit
+   slightly higher (~15.6–15.7 GB).
 9. **Runs can be noisy; medians matter** — e.g. q5 DFlash2 short-context
    spread 68.4–86.5, q4 DFlash2 32k spread 84.5–101.3.
 
 ## Caveats
 
-- Only the 4.00 bpw aside run reached beyond 32k; 32k+ is still outstanding
-  for the other 4.00 bpw runs and for 5.00/6.00 bpw.
-- The 96k/126k decode medians rest on 2 runs († in the aside table).
+- Only the two 4.00 bpw aside runs reached beyond 32k; 32k+ is still
+  outstanding for the other 4.00 bpw runs and for 5.00/6.00 bpw.
+- The 96k/126k decode medians rest on 2 runs († in both aside tables).
 - `cpu_moe_split_experts` differs per run (90/100/100 for 4.00, 125/135/135 for
   5.00, 145/150/155 for 6.00): draft variants load extra weights, so absolute
   numbers across modes conflate offload level with speculation. MTP
-  `draft_num_tokens` also varied per run (2, 4, 5); DFlash2 runs all used 5.
+  `draft_num_tokens` also varied per run (2, 4, 5); DFlash2 runs used 5
+  (short range) or 2 (aside).
 - `prompt_tokens unchecked` flag applies to all runs
   ("non-Qwen model" at 4k/16k, "no reference count" at 32k).
 - Medians over 5 runs each; no early-stop runs were seen.
 
 ## Raw results
 
+- `exllamav3-20261112T114437Z-q4-exl3-4-00bpw.json` (4.00 bpw, DFlash2 2 draft tokens — aside, full range)
 - `exllamav3-20261112T112000Z-q4-exl3-4-00bpw.json` (4.00 bpw, MTP 2 draft tokens — aside, full range)
 - `exllamav3-20261112T110224Z-q4-exl3-4-00bpw.json` (4.00 bpw, no spec)
 - `exllamav3-20261112T105611Z-q4-exl3-4-00bpw.json` (4.00 bpw, MTP)
