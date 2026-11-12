@@ -111,6 +111,6 @@ Generated with [`plots/qfn_coder.py`](plots/qfn_coder.py)
 
 ## Raw results
 
-- `polystrata-20261112T171930Z-qwen3-8-flash-next-coder-iq1-m.json`
+- `results/qwen-flash-next/polystrata-20261112T171930Z-qwen3-8-flash-next-coder-iq1-m.json`
   (also in `../llm-bench/results/` under its original name
   `20261112T171930Z-qwen3-8-flash-next-coder-iq1-m.json`)

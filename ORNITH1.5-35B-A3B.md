@@ -158,12 +158,12 @@ the llm-bench protocol above.
 
 ## Raw results
 
-- `exllamav3-20261111T205345Z-ornith-1-5-35b-a3b-exl3-4-00bpw-24gb.json` (canonical)
-- `llamacpp-20261111T213807Z-ornith-1-5-35b-a3b-apex-i-quality-no-mtp.json` (canonical)
-- `polystrata-20261111T211316Z-ornith-1-5-35b-a3b-apex-i-quality.json` (canonical)
-- `llamacpp-20261111T230253Z-ornith-1-5-35b-a3b-apex-i-quality-mtp.json` (canonical MTP, full range — current 23:02Z run)
-- `llamacpp-ornith-1-5-35b-a3b-apex-i-quality-mtp.json` (superseded; earlier 19:56Z run, 4k/16k only)
-- `exllamav3-20261111T155934Z-ornith-1-5-35b-a3b-exl3-4-00bpw-24gb.json` (superseded)
-- `exllamav3-20261111T145111Z-ornith-1-5-35b-a3b-exl3-4-00bpw-24gb.json` (stale run, ~35 tok/s short decode)
-- `llamacpp-ornith-1-5-35b-a3b-apex-i-quality-no-mtp.json` (superseded, earlier 19:45Z run, 4k/16k only)
-- `polystrata-ornith-1-5-35b-a3b-apex-i-quality.json` (superseded, earlier 15:36Z run)
+- `results/ornith/exllamav3-20261111T205345Z-ornith-1-5-35b-a3b-exl3-4-00bpw-24gb.json` (canonical)
+- `results/ornith/llamacpp-20261111T213807Z-ornith-1-5-35b-a3b-apex-i-quality-no-mtp.json` (canonical)
+- `results/ornith/polystrata-20261111T211316Z-ornith-1-5-35b-a3b-apex-i-quality.json` (canonical)
+- `results/ornith/llamacpp-20261111T230253Z-ornith-1-5-35b-a3b-apex-i-quality-mtp.json` (canonical MTP, full range — current 23:02Z run)
+- `results/ornith/llamacpp-ornith-1-5-35b-a3b-apex-i-quality-mtp.json` (superseded; earlier 19:56Z run, 4k/16k only)
+- `results/ornith/exllamav3-20261111T155934Z-ornith-1-5-35b-a3b-exl3-4-00bpw-24gb.json` (superseded)
+- `results/ornith/exllamav3-20261111T145111Z-ornith-1-5-35b-a3b-exl3-4-00bpw-24gb.json` (stale run, ~35 tok/s short decode)
+- `results/ornith/llamacpp-ornith-1-5-35b-a3b-apex-i-quality-no-mtp.json` (superseded, earlier 19:45Z run, 4k/16k only)
+- `results/ornith/polystrata-ornith-1-5-35b-a3b-apex-i-quality.json` (superseded, earlier 15:36Z run)

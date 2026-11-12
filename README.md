@@ -42,26 +42,25 @@ Engine config docs: [`LLAMA_CPP_CONF.md`](LLAMA_CPP_CONF.md),
 
 ## Raw results (master list)
 
-The per-model files list and annotate their own JSON files; this is the flat
-list, newest first.
+JSON files live under `results/`, grouped by model. Full annotations are in the
+per-model files.
 
-- `20261112T155239Z-qwen3-6-35b-a3b-ud-q4-k-xl.json` (Qwen3.6 UD Q4_K_XL, PolyStrata — [QWEN3.6-35B-A3B.md](QWEN3.6-35B-A3B.md))
-- `20261112T151400Z-qwen3-6-35b-a3b-ud-q4-k-xl.json` (Qwen3.6 UD Q4_K_XL, Strata Unsloth build)
-- `20261112T134157Z-qwen-3-6-q4-llama.json` (Qwen3.6, llama.cpp no-drafter)
-- `20261112T132841Z-qwen-3-6-q4-llama.json` (Qwen3.6, llama.cpp MTP)
-- `20261112T171930Z-qwen3-8-flash-next-coder-iq1-m.json` (Qwen3.8-Flash-Next "Coder" IQ1_M, Polystrata nov-7 build, `--spec 2` — [QWEN3.8-FLASH_NEXT.md](QWEN3.8-FLASH_NEXT.md))
-- `exllamav3-20261112T124935Z-q5-exl3-5-00bpw.json`
-- `exllamav3-20261112T121921Z-q5-exl3-5-00bpw.json`
-- `exllamav3-20261112T114437Z-q4-exl3-4-00bpw.json`
-- `exllamav3-20261112T112000Z-q4-exl3-4-00bpw.json`
-- `exllamav3-20261112T110224Z-q4-exl3-4-00bpw.json`
-- `exllamav3-20261112T105611Z-q4-exl3-4-00bpw.json`
-- `exllamav3-20261112T105007Z-q4-exl3-4-00bpw.json`
-- `exllamav3-20261112T102706Z-q5-exl3-5-00bpw.json`
-- `exllamav3-20261112T102146Z-q5-exl3-5-00bpw.json`
-- `exllamav3-20261112T101715Z-q5-exl3-5-00bpw.json`
-- `exllamav3-20261112T093939Z-q6-exl3-6-00bpw-hb6.json`
-- `exllamav3-20261112T091548Z-q6-exl3-6-00bpw-hb6.json`
-- `exllamav3-20261112T091045Z-q6-exl3-6-00bpw-hb6.json`
-- Ornith 1.5 35B-A3B: nine JSON files, annotated in
-  [ORNITH1.5-35B-A3B.md](ORNITH1.5-35B-A3B.md)
+### `results/ornith/` — Ornith 1.5 35B-A3B (9 files)
+
+See [ORNITH1.5-35B-A3B.md](ORNITH1.5-35B-A3B.md) — canonical, superseded and
+stale runs annotated there.
+
+### `results/qwen/` — Qwen3.6-35B-A3B (17 files)
+
+- `20261112T155239Z-qwen3-6-35b-a3b-ud-q4-k-xl.json` (UD Q4_K_XL, PolyStrata)
+- `20261112T151400Z-qwen3-6-35b-a3b-ud-q4-k-xl.json` (UD Q4_K_XL, Strata Unsloth build)
+- `20261112T134157Z-qwen-3-6-q4-llama.json` (llama.cpp no-drafter)
+- `20261112T132841Z-qwen-3-6-q4-llama.json` (llama.cpp MTP)
+- 13 × `exllamav3-20261112T…-q{4,5,6}-exl3-*.json` (EXL3 4.00/5.00/6.00 bpw; no-spec /
+  MTP / DFlash2 short-range runs plus 2-draft asides)
+
+See [QWEN3.6-35B-A3B.md](QWEN3.6-35B-A3B.md) for the full annotated list.
+
+### `results/qwen-flash-next/` — Qwen3.8-Flash-Next (1 file)
+
+- `polystrata-20261112T171930Z-qwen3-8-flash-next-coder-iq1-m.json` (Coder IQ1_M, Polystrata nov-7 build, `--spec 2` — [QWEN3.8-FLASH_NEXT.md](QWEN3.8-FLASH_NEXT.md))
