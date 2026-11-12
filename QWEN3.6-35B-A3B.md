@@ -26,7 +26,7 @@ DFlash2 draft quant: `q-dflash2-35b-exl3-3.00bpw` (local).
 
 - **Model:** Qwen3.6-35B-A3B (~35B MoE, A3B active).
 - **Engine:** ExLlamaV3 (same fork/build as the Ornith 20:53Z run — see
-  [README.md](README.md)).
+  [ORNITH1.5-35B-A3B.md](ORNITH1.5-35B-A3B.md)).
 - **Bench tool / protocol:** same llm-bench protocol as the README (prefill at
   fixed lengths, decode 512 tokens, 5 runs, medians). 32k–128k still
   outstanding for the 5.00/6.00 bpw quants.
@@ -219,7 +219,7 @@ run.)
 Three more runs on the same day: the UD Q4_K_XL GGUF benchmarked with
 llama.cpp (MTP on/off), the original Strata engine (Unsloth build of the
 same quant), and PolyStrata (full-suite run). Settings follow the Ornith
-sweep in [README.md](README.md) unless tagged into the run:
+sweep in [ORNITH1.5-35B-A3B.md](ORNITH1.5-35B-A3B.md) unless tagged into the run:
 
 | Time (UTC) | Engine | Drafter | Tag extras (beyond the shared settings) |
 | --- | --- | --- | --- |
@@ -261,7 +261,7 @@ full-range runs)
   competitive (slightly ahead of llama.cpp MTP) below 32k.
 - **llama.cpp MTP (3 draft tokens) roughly doubles llama.cpp decode** —
   63.4 → 113.5 short, 62.3 → 96.0 at 4k. Opposite of the Ornith llama.cpp
-  result in [README.md](README.md), where MTP cost ~44% — different build
+  result in [ORNITH1.5-35B-A3B.md](ORNITH1.5-35B-A3B.md), where MTP cost ~44% — different build
   and different GGUF, so take it as a soft point.
 - The 32k MTP decode (103.1, spread 91.9–123.7) is above its 16k value
   (91.3); wide spread, handle with care.

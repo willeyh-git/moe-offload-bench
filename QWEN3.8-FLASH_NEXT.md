@@ -1,7 +1,7 @@
 # Qwen3.8-Flash-Next "Coder" (IQ1_M) — Polystrata (Radeon 9070 XT)
 
 A single-run benchmark of the Qwen3.8-Flash-Next **Coder** IQ1_M GGUF through
-Polystrata, on the same machine as the Ornith sweep in [README.md](README.md).
+Polystrata, on the same machine as the Ornith sweep in [ORNITH1.5-35B-A3B.md](ORNITH1.5-35B-A3B.md).
 The engine is a **nov-7 build of Polystrata** (0.1.45-poly.8 release line),
 run with the MTP drafter and a 2-token verify window (`--spec 2`). The run
 itself is dated 2026-11-12 17:19Z and tagged `Polystrata nov 7 QFN Coder
@@ -25,7 +25,7 @@ English/CJK.
 - **Engine:** Polystrata ([simplexai-labs/PolyStrata](https://github.com/simplexai-labs/PolyStrata)),
   binary built **2026-11-07/08** — `a721e9c4` is HEAD of that date and
   `0c898b9c` merges the next-release 0.1.45-poly.8; the run tag says "nov 7".
-  (The Ornith runs in the README used the newer `e4ea22a3` build, so absolute
+  (The Ornith runs in ORNITH1.5-35B-A3B.md used the newer `e4ea22a3` build, so absolute
   numbers are not directly comparable build-to-build.)
 - **Speculation:** `--spec 2` — the MTP drafter proposes a 2-token verify
   window per check.
