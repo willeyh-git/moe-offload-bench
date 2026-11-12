@@ -46,7 +46,7 @@ RUNS = [
 
 
 def main():
-    fig, (ax_pre, ax_dec) = plt.subplots(2, 1, figsize=(8.5, 8.0), sharex=True)
+    fig, (ax_pre, ax_dec) = plt.subplots(2, 1, figsize=(8.5, 8.6), sharex=True)
 
     for r in RUNS:
         ax_pre.plot(prefill_x, r["prefill"], marker="o", color=r["color"],
@@ -64,11 +64,12 @@ def main():
     ax_dec.set_xlabel("Prompt / context length")
     ax_dec.legend(loc="upper right", fontsize=8, framealpha=0.9)
 
-    fig.tight_layout()
     fig.suptitle(
-        "Best Q4-class combo per model (highest total prefill + decode @128k)"
+        "Best Q4-class combo per model\n(highest total prefill + decode @128k)",
+        y=0.995,
     )
     out = os.path.join(os.path.dirname(__file__), "best_q4_128k.png")
+    fig.tight_layout(rect=(0, 0, 1, 0.93))
     fig.savefig(out, dpi=150)
     print("saved", out)
 
