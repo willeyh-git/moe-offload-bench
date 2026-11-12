@@ -15,6 +15,8 @@ inference engines on RDNA4 (Radeon 9070 XT).
 ## Scope
 
 - **Model:** Ornith 1.5 35B-A3B (~35B params, MoE), different quantizations per engine.
+  A second, single-run model: Qwen3.8-Flash-Next "Coder" IQ1_M on Polystrata
+  (nov-7 build, `--spec 2`) — see [QWEN3.8-FLASH_NEXT.md](QWEN3.8-FLASH_NEXT.md).
 - **Engines:** llama.cpp (APEX GGUF), exllamav3 (EXL3), Polystrata (APEX GGUF).
 - **Bench tool:** [willeyh-git/llm-bench](https://github.com/willeyh-git/llm-bench) (Go, commit `f5de163`).
   It drives each engine's OpenAI-compatible server through the protocol below;
@@ -51,7 +53,7 @@ llama.cpp flag --moe-cache-cpu-share is not provided. Saw no immediate gains, se
 | Engine | Source | Commit used |
 | --- | --- | --- |
 | llama.cpp | [ggml-org/llama.cpp](https://github.com/ggml-org/llama.cpp) (ROCm build, `BUILD-ROCM.sh`) | `f7b886fe` (2026-11-11) |
-| Polystrata | [simplexai-labs/PolyStrata](https://github.com/simplexai-labs/PolyStrata) | `e4ea22a3` (2026-11-10) |
+| Polystrata | [simplexai-labs/PolyStrata](https://github.com/simplexai-labs/PolyStrata) | `e4ea22a3` (2026-11-10, Ornith runs); QFN Coder run on a nov-7 build (`a721e9c4`, 2026-11-07) — see [QWEN3.8-FLASH_NEXT.md](QWEN3.8-FLASH_NEXT.md) |
 | exllamav3 | fork [willeyh-git/exl3-rdna4-recipe](https://github.com/willeyh-git/exl3-rdna4-recipe) (forked from [parth-thakre/exl3-rdna4-recipe](https://github.com/parth-thakre/exl3-rdna4-recipe)) | `fe77c7b4` (2026-11-02, fork base, ExLlamaV3 v1.6.6) |
 
 ## Results
@@ -178,6 +180,7 @@ the llm-bench protocol above.
 
 ## Raw results
 
+- `polystrata-20261112T171930Z-qwen3-8-flash-next-coder-iq1-m.json` (Qwen3.8-Flash-Next "Coder" IQ1_M, Polystrata nov-7 build, `--spec 2` — see [QWEN3.8-FLASH_NEXT.md](QWEN3.8-FLASH_NEXT.md))
 - `exllamav3-20261111T205345Z-ornith-1-5-35b-a3b-exl3-4-00bpw-24gb.json` (canonical)
 - `llamacpp-20261111T213807Z-ornith-1-5-35b-a3b-apex-i-quality-no-mtp.json` (canonical)
 - `polystrata-20261111T211316Z-ornith-1-5-35b-a3b-apex-i-quality.json` (canonical)
