@@ -42,19 +42,23 @@ Engine config docs: [`LLAMA_CPP_CONF.md`](LLAMA_CPP_CONF.md),
 
 ## Best Q4-class combo per model (128k)
 
-One panel per model, Q4-class quants only (Ornith: APEX GGUF / EXL3 4.00 bpw; Qwen3.6: EXL3 4.00 bpw / UD Q4_K_XL GGUF). A run must reach 128k to be eligible; the combo with the **highest total of prefill@128k + decode@128k (tok/s)** wins (black, bold total; others greyed). Qwen3.8-Flash-Next Coder is included for reference although it is IQ1_M, not Q4.
+One bar per model in two panels — prefill and decode at 128k — showing only the
+winning combo (highest total of prefill@128k + decode@128k, eligible runs must
+reach 128k). Legend: model / quant / engine. Q4-class quants for Ornith (APEX
+GGUF / EXL3 4.00 bpw) and Qwen3.6 (EXL3 4.00 bpw / UD Q4_K_XL GGUF); QFn Coder
+is IQ1_M, included for reference.
 
 ![Best Q4-class combo per model at 128k](plots/best_q4_128k.png)
 
-| Model | Winner | Prefill @128k | Decode @128k | Total |
+| Model | Winner (quant / engine) | Prefill @128k | Decode @128k | Total |
 | --- | --- | ---: | ---: | ---: |
-| Ornith 1.5 35B-A3B | exllamav3, EXL3 4.0 bpw + DFlash2 draft | 1 168 | 57.3 | **1 225** |
-| Qwen3.6-35B-A3B | exllamav3, EXL3 4.0 bpw + DFlash2 (2 drafts) | 1 246 | 71.6 | **1 317** |
-| Qwen3.8-Flash-Next Coder | Polystrata nov-7, `--spec 2` (IQ1_M) | 1 572 | 44.0 | **1 616** |
+| Ornith 1.5 35B-A3B | EXL3 4.0 bpw, DFlash2 / exllamav3 | 1 168 tok/s | 57.3 tok/s | **1 225 tok/s** |
+| Qwen3.6-35B-A3B | EXL3 4.0 bpw, DFlash2 (2 drafts) / exllamav3 | 1 246 tok/s | 71.6 tok/s | **1 317 tok/s** |
+| Qwen3.8-Flash-Next Coder | IQ1_M / Polystrata nov-7 `--spec 2` | 1 572 tok/s | 44.0 tok/s | **1 616 tok/s** |
 
-Excluded for not reaching 128k: llama.cpp and exllamav3 short-range Qwen3.6
-runs (~32k max). QFn Coder has a single eligible run, so it is its own winner
-by default.
+Excluded for not reaching 128k: llama.cpp Qwen3.6 runs and the exllamav3
+short-range Qwen3.6 runs (~32k max). QFn Coder has a single eligible run, so
+it is its own winner by default.
 
 Generated with [`plots/best_q4_128k.py`](plots/best_q4_128k.py)
 (`uv run --with matplotlib python best_q4_128k.py`).
