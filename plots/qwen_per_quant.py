@@ -64,6 +64,25 @@ quants = {
             "DFlash2":  [97.1, 99.0, 88.5],
         },
     },
+    "gguf": {
+        "title": "Qwen3.6-35B-A3B — UD Q4_K_XL GGUF (llama.cpp / PolyStrata)",
+        "out": "qwen3.6-gguf-ud-q4-k-xl.png",
+        "sub": "llama.cpp (MTP 3 drafts / no drafter) and PolyStrata, Radeon 9070 XT (2026-11-12)",
+        "xs": [0.09, 4, 16, 32, 64],
+        "labels": {"none": "llama.cpp (no drafter)",
+                   "MTP": "llama.cpp MTP (3 drafts)",
+                   "DFlash2": "PolyStrata"},
+        "prefill": {
+            "none":    [1058.3, 1129.9, 1089.2],
+            "MTP":     [941.1, 1006.2, 967.8],
+            "DFlash2": [1962.1, 2144.1, 1602.2, 1198.0],
+        },
+        "decode": {
+            "none":    [63.4, 62.3, 57.6, 53.1],
+            "MTP":     [113.5, 96.0, 91.3, 103.1],
+            "DFlash2": [136.0, 142.7, 122.2, 107.7, 85.8],
+        },
+    },
 }
 
 # draw order, color, line style
@@ -99,7 +118,7 @@ for q in quants.values():
     ax2.set_xticks(q["xs"])
     ax2.set_xticklabels(xtick_labels(q["xs"]))
     ax2.set_xlabel("Prompt / context length")
-    fig.suptitle(f"{q['title']} — ExLlamaV3, Radeon 9070 XT (2026-11-12)")
+    fig.suptitle(f"{q['title']} — {q.get('sub', 'ExLlamaV3, Radeon 9070 XT (2026-11-12)}')}")
     fig.tight_layout()
     fig.savefig(q["out"], dpi=200)
     print("saved", q["out"])

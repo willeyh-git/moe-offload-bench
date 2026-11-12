@@ -8,6 +8,9 @@ full-range MTP and DFlash2 runs at both 4.00 and 5.00 bpw, all with
 Prefill/decode lengths: 4k and 16k for all runs; 32k for the 4.00 bpw set
 (the aside runs extend to 126k).
 
+In the same day, a separate pass ran on a GGUF (UD Q4_K_XL): llama.cpp with
+and without MTP, and PolyStrata — see the GGUF section below.
+
 ## Sources
 
 | Quant | Hugging Face | Local name |
@@ -210,6 +213,48 @@ run.)
   short) — so the earlier "DFlash2 flips 5.00 bpw" picture softens: re-run
   with equal draft tokens, MTP keeps the long-context win there too.
 
+## GGUF runs — UD Q4_K_XL (llama.cpp and PolyStrata)
+
+Three more runs on the same day: one GGUF (UD Q4_K_XL; bench names
+`qwen-3.6-q4--llama` for the llama.cpp runs and
+`qwen3.6-35b-a3b-ud-q4_k_xl` for PolyStrata) benchmarked with llama.cpp
+(MTP on/off) and with PolyStrata. Settings follow the Ornith sweep in
+[README.md](README.md) unless tagged into the run:
+
+| Time (UTC) | Engine | Drafter | Tag extras (beyond the shared settings) |
+| --- | --- | --- | --- |
+| 13:28:41 | llama.cpp | MTP, 3 draft tokens | `cpu_moe 28` |
+| 13:41:57 | llama.cpp | none | `cpu_moe 25` |
+| 13:55:43 | PolyStrata | none | — |
+
+### Prefill, tok/s (TTFT s)
+
+| Run | 4 000 | 16 000 | 32 000 | 64 000 |
+| --- | ---: | ---: | ---: | ---: |
+| llama.cpp MTP | 941.1 (4.40) | 1 006.2 (16.19) | 967.8 (33.79) | — |
+| llama.cpp no-drafter | 1 058.3 (3.91) | 1 129.9 (14.42) | **1 089.2** (30.02) | — |
+| PolyStrata | **1 962.1** (2.11) | **2 144.1** (7.60) | **1 602.2** (20.41) | **1 198.0** (54.58) |
+
+### Decode, tok/s (median / min–max, 5 runs each)
+
+| Run | ~90 (short) | 4 000 | 16 000 | 32 000 | 64 000 |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| llama.cpp MTP | 113.5 (97.5–144.4) | 96.0 (90.4–100.3) | 91.3 (86.0–100.7) | 103.1 (91.9–123.7) | — |
+| llama.cpp no-drafter | 63.4 (63.2–63.7) | 62.3 (62.1–62.9) | 57.6 (57.3–58.1) | 53.1 (52.9–53.3) | — |
+| PolyStrata | **136.0** (135.0–149.6) | **142.7** (139.9–145.5) | **122.2** (116.9–128.4) | **107.7** (106.5–109.8) | **85.8** (80.8–89.0) |
+
+- **PolyStrata is the decode and prefill standout** — 136.0–142.7 short/4k
+  is ~25% ahead of the best ExLlamaV3 result (4.00 bpw DFlash2, 113.0), with
+  no drafter involved at all; prefill 1 962/2 144 at 4k/16k is ~2× the
+  unquantized EXL3 q4 none run (1 643/1 657). 64k is a soft spot: prefill
+  drops to 1 198 and decode to 85.8.
+- **llama.cpp MTP (3 draft tokens) roughly doubles llama.cpp decode** —
+  63.4 → 113.5 short, 62.3 → 96.0 at 4k. Opposite of the Ornith llama.cpp
+  result in [README.md](README.md), where MTP cost ~44% — different build
+  and different GGUF, so take it as a soft point.
+- The 32k MTP decode (103.1, spread 91.9–123.7) is above its 16k value
+  (91.3); wide spread, handle with care.
+
 ## Throughput graphs
 
 One figure per quant (prefill on top, decode below — short-context decode
@@ -229,6 +274,10 @@ MTP 11:20Z @4.00 and 12:49Z @5.00; orange = DFlash2 11:44Z @4.00 and
 **6.00 bpw**
 
 ![Qwen3.6 6.00 bpw plots](plots/qwen3.6-6.00bpw.png)
+
+**GGUF (UD Q4_K_XL: llama.cpp ± MTP vs PolyStrata)**
+
+![Qwen3.6 GGUF UD Q4_K_XL: llama.cpp ± MTP vs PolyStrata](plots/qwen3.6-gguf-ud-q4-k-xl.png)
 
 Generated with [`plots/qwen_per_quant.py`](plots/qwen_per_quant.py)
 (`uv run --with matplotlib python qwen_per_quant.py`).
@@ -263,12 +312,21 @@ Generated with [`plots/qwen_per_quant.py`](plots/qwen_per_quant.py)
    higher (~15.3–15.7 GB).
 9. **Runs can be noisy; medians matter** — e.g. q5 DFlash2 short-context
    spread 68.4–86.5, q4 DFlash2 32k spread 84.5–101.3.
+10. **PolyStrata (GGUF UD Q4_K_XL) is the clear winner on this machine** —
+    decode 136.0/142.7 short/4k and prefill 1 962/2 144 at 4k/16k; ~25% above
+    the best ExLlamaV3 decode and ~2× its prefill, with no drafter in the
+    config. Its 64k soft spot (prefill 1 198, decode 85.8) is unresolved.
+11. **llama.cpp + MTP was in the plus on this build** — 3-draft MTP is
+    +80% decode over the no-drafter run on the same engine (63.4 → 113.5);
+    on the Ornith build the same feature cost ~44%.
 
 ## Caveats
 
 - Runs beyond 32k exist only for the 4.00 and 5.00 bpw asides (both modes);
   still outstanding for 6.00 bpw and the remaining short-range runs.
 - The 96k/126k decode medians rest on 2 runs († in each aside table).
+- The GGUF runs stop at 32k (llama.cpp) / 64k (PolyStrata); llama.cpp 64k
+  no-drafter is still outstanding. VRAM for these three runs was not noted.
 - `cpu_moe_split_experts` differs per run (90/100/100 for 4.00, 125/135/135 for
   5.00, 145/150/155 for 6.00): draft variants load extra weights, so absolute
   numbers across modes conflate offload level with speculation. MTP
@@ -280,6 +338,9 @@ Generated with [`plots/qwen_per_quant.py`](plots/qwen_per_quant.py)
 
 ## Raw results
 
+- `20261112T135543Z-qwen3-6-35b-a3b-ud-q4-k-xl.json` (GGUF UD Q4_K_XL, PolyStrata)
+- `20261112T134157Z-qwen-3-6-q4-llama.json` (GGUF UD Q4_K_XL, llama.cpp no-drafter)
+- `20261112T132841Z-qwen-3-6-q4-llama.json` (GGUF UD Q4_K_XL, llama.cpp MTP 3 draft tokens)
 - `exllamav3-20261112T124935Z-q5-exl3-5-00bpw.json` (5.00 bpw, MTP 2 draft tokens — aside, full range)
 - `exllamav3-20261112T121921Z-q5-exl3-5-00bpw.json` (5.00 bpw, DFlash2 2 draft tokens — aside, full range)
 - `exllamav3-20261112T114437Z-q4-exl3-4-00bpw.json` (4.00 bpw, DFlash2 2 draft tokens — aside, full range)
