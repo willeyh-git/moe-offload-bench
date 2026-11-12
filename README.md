@@ -60,27 +60,27 @@ llama.cpp flag --moe-cache-cpu-share is not provided. Saw no immediate gains, se
 
 | Prompt length | llama.cpp no-MTP | llama.cpp MTP | exllamav3 | Polystrata |
 | ---: | ---: | ---: | ---: | ---: |
-| 4 000 | 965 (4.29) | 824 (5.02) | 1 293 (3.20) | **1 723 (2.40)** |
-| 16 000 | 1 033 (15.78) | 881 (18.49) | 1 356 (12.02) | **1 938 (8.41)** |
-| 32 000 | 1 003 (32.61) | — | 1 344 (24.32) | **1 605 (20.38)** |
-| 64 000 | 932 (70.17) | — | **1 279 (51.11)** | 1 133 (57.72) |
-| 96 000 | 877 (112.30) | — | **1 222 (80.65)** | 856 (115.10) |
-| 128 000 | 831 (155.25) | — | **1 168 (110.41)** | 709 (181.93) |
+| 4 000 | 965 (4.29) | 826 (5.01) | 1 293 (3.20) | **1 723 (2.40)** |
+| 16 000 | 1 033 (15.78) | 884 (18.44) | 1 356 (12.02) | **1 938 (8.41)** |
+| 32 000 | 1 003 (32.61) | 859 (38.07) | 1 344 (24.32) | **1 605 (20.38)** |
+| 64 000 | 932 (70.17) | 807 (81.00) | **1 279 (51.11)** | 1 133 (57.72) |
+| 96 000 | 877 (112.30) | 758 (129.95) | **1 222 (80.65)** | 856 (115.10) |
+| 128 000 | 831 (155.25) | 719 (179.31) | **1 168 (110.41)** | 709 (181.93) |
 
 ### Decode, tok/s (median over runs)
 
 | Context length | llama.cpp no-MTP | llama.cpp MTP | exllamav3 | Polystrata |
 | ---: | ---: | ---: | ---: | ---: |
-| ~16 (short) | 62.6 | 52.5 | **94.0** | 93.9 |
-| 4 000 | 62.3 | 58.1 | **92.3** | 91.1 |
-| 16 000 | 57.0 | 50.8 | **104.5** | 83.0 |
-| 32 000 | 52.1 | — | **82.6** | 74.3 |
-| 64 000 | 45.1 | — | **73.1** | 58.9 |
-| 96 000 | 39.2 | — | **61.7** | 50.1 |
-| 128 000 | 35.0 | — | **57.3** | 41.1 |
+| ~16 (short) | 62.6 | 53.0 | **94.0** | 93.9 |
+| 4 000 | 62.3 | 55.9 | **92.3** | 91.1 |
+| 16 000 | 57.0 | 54.4 | **104.5** | 83.0 |
+| 32 000 | 52.1 | 47.0 | **82.6** | 74.3 |
+| 64 000 | 45.1 | 41.8 | **73.1** | 58.9 |
+| 96 000 | 39.2 | 34.2 | **61.7** | 50.1 |
+| 128 000 | 35.0 | 32.1 | **57.3** | 41.1 |
 
-"-" = not run. The llama.cpp MTP column is the earlier 19:56Z run (4k/16k only,
-not re-run). exllamav3 figures are the canonical 20:53Z run; its 32k decode
+"-" = not run. The llama.cpp MTP column is the current 23:02Z run (full 4k–128k).
+exllamav3 figures are the canonical 20:53Z run; its 32k decode
 median includes two early-stop runs (244/245 tokens). llama.cpp's 96k decode
 comes from two early-stop runs (140/170 tokens), its only such context this run.
 
@@ -107,12 +107,12 @@ Generated with `plots/make_plots.py` (`python3` + matplotlib).
    1 168, very flat) and second at 4k–32k; Polystrata leads 4k–32k (1 723 /
    1 938 / 1 605) but degrades to 709 at 128k; llama.cpp now covers all six
    lengths — a flat ~1.0k tok/s at 4k–32k (965/1 033/1 003) easing to 831 at 128k,
-   the slowest measured (MTP 824/881 at 4k/16k).
-4. **MTP makes llama.cpp slower, not faster, in this stack** (earlier 19:56Z run, 4k/16k only;
-   not re-run). With MTP the no-MTP baseline is beaten on prefill (824/881 vs
-   965/1 033 tok/s) and on decode (52.5 vs 62.6 tok/s short context; 50.8 vs 57.0
-   at 16k) — the CPU-side speculation cost outweighs draft acceptance at 30
-   CPU-resident experts.
+   the slowest prefill overall; MTP eased from 826 at 4k to 719 at 128k.
+4. **MTP makes llama.cpp slower, not faster, in this stack** (full-range; the current 23:02Z data — the earlier 19:56Z run confirms this effect at 4k/16k). With MTP the no-MTP baseline
+   is beaten on prefill (826/884/859/807/758/719 vs
+   965/1 033/1 003/932/877/831 tok/s) and on decode across all contexts (53.0 vs 62.6 at short context;
+   55.9 vs 62.3 at 4k; 54.4 vs 57.0 at 16k; 47.0 vs 52.1 at 32k; 41.8 vs 45.1 at 64k; 34.2 vs 39.2 at 96k; 32.1 vs 35.0 at 128k) — CPU-side speculation cost outweighs draft acceptance across
+   all CPU-resident experts.
 5. **Hot cache benefit is real where it exists.** llama.cpp's 4 096 MiB
    `--moe-cache-mib` keeps decode at 62.3 at 4k and 57.0 at 16k (short: 62.6)
    before falling off past 32k (52.1); exllamav3 holds 92.3 at 4k (short: 94.0)
@@ -127,9 +127,9 @@ Generated with `plots/make_plots.py` (`python3` + matplotlib).
   the 128k prompt; the 15:59Z run reached 75.4 tok/s. The ~3× spread across the
   three runs still needs a written explanation before the 20:53Z numbers are
   settled as canonical.
-- The llama.cpp MTP column is the **19:56Z run (4k/16k only)** and was not
-  re-run, so it cannot be compared beyond 16k; its decode at 4k (58.1) is also
-  noisier than the no-MTP runs.
+- The llama.cpp MTP column is the **23:02Z run (full 4k–128k)**. The earlier
+  19:56Z run (4k/16k only) is superseded and matches this one at 4k/16k; no
+  early-stop runs are flagged within it.
 - Early-stop runs (`finish_reason: stop`) pulled into medians: llama.cpp 21:38Z
   at 96k (both runs, 140/170 tokens), exllamav3 20:53Z at 32k (2 of 5 runs, 244
   and 245 tokens), Polystrata 21:13Z at 64k (1 of 5, 162 tokens) and 128k (1 of 2,
@@ -181,7 +181,8 @@ the llm-bench protocol above.
 - `exllamav3-20261111T205345Z-ornith-1-5-35b-a3b-exl3-4-00bpw-24gb.json` (canonical)
 - `llamacpp-20261111T213807Z-ornith-1-5-35b-a3b-apex-i-quality-no-mtp.json` (canonical)
 - `polystrata-20261111T211316Z-ornith-1-5-35b-a3b-apex-i-quality.json` (canonical)
-- `llamacpp-ornith-1-5-35b-a3b-apex-i-quality-mtp.json` (MTP result, earlier 19:56Z run)
+- `llamacpp-20261111T230253Z-ornith-1-5-35b-a3b-apex-i-quality-mtp.json` (canonical MTP, full range — current 23:02Z run)
+- `llamacpp-ornith-1-5-35b-a3b-apex-i-quality-mtp.json` (superseded; earlier 19:56Z run, 4k/16k only)
 - `exllamav3-20261111T155934Z-ornith-1-5-35b-a3b-exl3-4-00bpw-24gb.json` (superseded)
 - `exllamav3-20261111T145111Z-ornith-1-5-35b-a3b-exl3-4-00bpw-24gb.json` (stale run, ~35 tok/s short decode)
 - `llamacpp-ornith-1-5-35b-a3b-apex-i-quality-no-mtp.json` (superseded, earlier 19:45Z run, 4k/16k only)
