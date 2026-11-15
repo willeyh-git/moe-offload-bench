@@ -1,0 +1,40 @@
+# Run 4 — pinned experts false, batch 4096 (baseline, no vision offload)
+network:
+  host: 0.0.0.0
+  port: 8096
+  disable_auth: true
+  api_servers: ["OAI"]
+
+model:
+  model_dir: ../models
+  model_name: Qwen3.6-35B-A3B-exl3-4.00bpw
+  backend: exllamav3
+  max_seq_len: 130816
+  cache_size: 131072
+  cache_mode: Q8
+  tensor_parallel: false
+  gpu_split_auto: true
+  autosplit_reserve: [512]
+  cpu_moe_split_experts: 100
+  cpu_moe_threads: 7
+  cpu_moe_pinned_arena: false
+  max_batch_size: 1
+  chunk_size: 4096
+  output_chunking: true
+  vision_offload: false
+  vision: false
+
+draft_model:
+  draft_mode: mtp
+  draft_cache_mode: Q4
+  draft_num_tokens: 2
+  dynamic_draft: true
+  draft_confidence: 0.4
+
+sampling:
+  temperature: { override: 0.6, force: false }
+  top_p: { override: 0.95, force: false }
+  top_k: { override: 20, force: false }
+  min_p: { override: 0.0, force: false }
+  presence_penalty: { override: 0.0, force: false }
+  repetition_penalty: { override: 1.0, force: false }
