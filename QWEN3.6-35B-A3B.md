@@ -214,6 +214,42 @@ run.)
   short) — so the earlier "DFlash2 flips 5.00 bpw" picture softens: re-run
   with equal draft tokens, MTP keeps the long-context win there too.
 
+## Improved baseline — full range 4k→128k (2026-11-15)
+
+A follow-up full-range run with the improved baseline config (batch 5120,
+cpu_stage_threads 6, pinned_arena false, vision_offload true) — no speculation,
+no GDN/swizzle flags. See [Qwen3.6-35b-a3b-improvements.md](Qwen3.6-35b-a3b-improvements.md)
+for the full comparison of tweak flags.
+
+| Metric | Value |
+| --- | --- |
+| Decode TPS (med, short) | 109.37 (105.09–115.80) |
+| Decode @4k (med) | 109.97 (108.92–116.59) |
+| Decode @16k (med) | 103.90 (95.99–107.20) |
+| Decode @32k (med) | 101.28 (95.38–105.36) |
+| Decode @64k (med) | 93.22 (88.17–94.77) |
+| Decode @96k (med) | 89.53 (87.99–91.07) |
+| Decode @128k (med) | 82.75 (81.12–84.38) |
+| Prefill 4k TPS | 2314 (TTFT 1.79 s) |
+| Prefill 16k TPS | 2566 (TTFT 6.35 s) |
+| Prefill 32k TPS | 2606 (TTFT 12.55 s) |
+| Prefill 64k TPS | 2411 (TTFT 27.11 s) |
+| Prefill 96k TPS | 2178 (TTFT 45.24 s) |
+| Prefill 128k TPS | 2009 (TTFT 64.20 s) |
+
+vs the original 4.00 bpw aside runs (2 draft tokens):
+
+- **Prefill: dramatically faster** — 2 314/2 566/2 606 vs 1 463/1 534/1 492 at
+  4k/16k/32k (DFlash2); the improved staging/threads config nearly doubles
+  prefill throughput.
+- **Decode: comparable to MTP aside** — 109.4 short vs 112.8 (MTP 2-draft),
+  101.3 at 32k vs 100.7; the no-spec run holds decode flat across context
+  lengths where MTP/DFlash2 fall off more steeply.
+- **At 128k: prefill 2 009 tok/s, decode 82.8 tok/s** — beats the DFlash2
+  aside at 128k (1 246 / 71.6) and matches the MTP aside (1 211 / 83.3).
+
+Raw: [results/20261115T125911Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/20261115T125911Z-qwen3-6-35b-a3b-exl3-4-00bpw.json)
+
 ## GGUF runs — UD Q4_K_XL (llama.cpp, Strata, PolyStrata)
 
 Three more runs on the same day: the UD Q4_K_XL GGUF benchmarked with

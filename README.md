@@ -85,7 +85,7 @@ bpw / UD Q4_K_XL GGUF); QFn Coder is IQ1_M, included for reference.
 | Model | Winner (quant / engine) | Prefill @128k | Decode @128k |
 | --- | --- | ---: | ---: |
 | Ornith 1.5 35B-A3B | EXL3 4.0 bpw, DFlash2 / exllamav3 | 1 168 tok/s | 57.3 tok/s |
-| Qwen3.6-35B-A3B | EXL3 4.0 bpw, DFlash2 (2 drafts) / exllamav3 | 1 246 tok/s | 71.6 tok/s |
+| Qwen3.6-35B-A3B | EXL3 4.0 bpw, no-spec / exllamav3 (tweaked) | **2 009 tok/s** | **82.8 tok/s** |
 | Qwen3.8-Flash-Next Coder | IQ1_M / Polystrata nov-7 `--spec 2` | 1 572 tok/s | 44.0 tok/s |
 
 Excluded for not reaching 128k: llama.cpp Qwen3.6 runs and the exllamav3

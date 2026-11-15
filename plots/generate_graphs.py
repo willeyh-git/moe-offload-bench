@@ -11,11 +11,11 @@ import os
 RESULTS_DIR = "/home/willyhetland/Storage/code/llm-bench/results"
 OUTPUT_DIR = "/home/willyhetland/Storage/code/moe-offload-bench"
 
-# Load the last 4 Qwen3.6-35B-A3B results
+# Load all Qwen3.6-35B-A3B results from 2026-11-15
 files = sorted([
     f for f in os.listdir(RESULTS_DIR)
     if f.startswith("20261115") and "qwen3-6-35b" in f
-])[:4]
+])
 files.reverse()  # oldest first
 
 runs = []
@@ -27,10 +27,16 @@ for f in files:
 # Extract key metrics
 labels = [r["tag"] for r in runs]
 short_labels = [
-    "batch 5120\npinned false\nthreads 7",
-    "batch 4096\npinned false\nthreads 7",
-    "batch 4096\npinned true",
+    "batch inc\nno cpu_threads",
     "batch 4096\npinned false",
+    "pinned true",
+    "batch 4096\ncpu_threads 6",
+    "batch 5120\ncpu_threads 6",
+    "swizzle -1",
+    "wide -1",
+    "gdn_sub 2048",
+    "bc_gdn -1",
+    "FULL RUN",
 ]
 
 prefill_4k = [r["prefill"]["4000"]["tps"] for r in runs]
