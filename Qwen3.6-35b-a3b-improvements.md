@@ -27,6 +27,8 @@ All runs share `EXL3_QC_STAGING=1` and `EXL3_GDN_REPLAY=1`. Runs 2–4 were laun
 | 4 | 2026-11-15 11:44 | pinned experts false, batch 4096 | 4096 | false | — | 106.59 | 107.27 | 103.19 | 97.45 |
 | 5 | 2026-11-15 12:27 | pinned experts false, batch 5120, vision offload, cpu_stage_threads 6, threads 7, **swizzle -1** | 5120 | false | 14.7 GB | 112.36 | 114.36 | 105.67 | 104.29 |
 | 6 | 2026-11-15 12:37 | pinned experts false, batch 5120, vision offload, cpu_stage_threads 6, threads 7, **wide -1** | 5120 | false | 14.7 GB | 107.31 | 113.13 | 103.87 | 102.98 |
+| 7 | 2026-11-15 12:45 | pinned experts false, batch 5120, vision offload, cpu_stage_threads 6, threads 7, **gdn_sub_chunk 2048** | 5120 | false | 14.7 GB | 105.73 | 107.40 | 102.42 | 96.85 |
+| 8 | 2026-11-15 12:52 | pinned experts false, batch 5120, vision offload, cpu_stage_threads 6, threads 7, **bc_gdn -1** | 5120 | false | 14.7 GB | 109.18 | 110.24 | 105.05 | 96.58 |
 
 > **Last run (Run 1) power & VRAM:** GPU at ~200–250 W, CPU at ~50 W, total VRAM ~15.3 GB.
 
@@ -40,6 +42,8 @@ All runs share `EXL3_QC_STAGING=1` and `EXL3_GDN_REPLAY=1`. Runs 2–4 were laun
 | 4 | 2312 | 1.79 | 2534 | 6.43 | 2514 | 13.00 |
 | 5 | 2280 | 1.82 | 2444 | 6.67 | 2491 | 13.13 |
 | 6 | 2279 | 1.82 | 2428 | 6.71 | 2492 | 13.12 |
+| 7 | 2268 | 1.83 | 2448 | 6.66 | 2485 | 13.16 |
+| 8 | 2335 | 1.77 | 2547 | 6.40 | 2587 | 12.64 |
 
 ### Decode Performance (tokens/sec)
 
@@ -53,6 +57,8 @@ All runs share `EXL3_QC_STAGING=1` and `EXL3_GDN_REPLAY=1`. Runs 2–4 were laun
 | 4 | 103.66 | 106.59 | 109.75 |
 | 5 | 105.48 | 112.36 | 113.36 |
 | 6 | 102.59 | 107.31 | 114.93 |
+| 7 | 95.13 | 105.73 | 109.25 |
+| 8 | 102.07 | 109.18 | 115.38 |
 
 #### Decode at Context Length
 
@@ -64,18 +70,24 @@ All runs share `EXL3_QC_STAGING=1` and `EXL3_GDN_REPLAY=1`. Runs 2–4 were laun
 | 4 | 4k | 103.46 | 107.27 | 112.73 |
 | 5 | 4k | 114.21 | 114.36 | 115.44 |
 | 6 | 4k | 108.91 | 113.13 | 116.46 |
+| 7 | 4k | 105.45 | 107.40 | 110.48 |
+| 8 | 4k | 107.23 | 110.24 | 113.09 |
 | 1 | 16k | 104.27 | **106.98** | 109.52 |
 | 2 | 16k | 106.34 | 108.25 | 111.90 |
 | 3 | 16k | 100.51 | 103.24 | 105.98 |
 | 4 | 16k | 98.55 | 103.19 | 104.52 |
 | 5 | 16k | 104.39 | 105.67 | 110.71 |
 | 6 | 16k | 100.32 | 103.87 | 105.92 |
+| 7 | 16k | 95.82 | 102.42 | 103.39 |
+| 8 | 16k | 101.23 | 105.05 | 105.94 |
 | 1 | 32k | 100.64 | **104.13** | 105.69 |
 | 2 | 32k | 99.26 | 101.54 | 103.79 |
 | 3 | 32k | 94.58 | 96.18 | 98.79 |
 | 4 | 32k | 93.66 | 97.45 | 99.75 |
 | 5 | 32k | 101.19 | 104.29 | 105.66 |
 | 6 | 32k | 98.57 | 102.98 | 104.64 |
+| 7 | 32k | 94.21 | 96.85 | 99.14 |
+| 8 | 32k | 94.73 | 96.58 | 102.67 |
 
 ---
 
@@ -85,15 +97,14 @@ Full benchmark JSONs are stored in the `results/` directory:
 
 | # | File | Tag |
 |---|------|-----|
-| 1 | [results/20261115T120402Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/20261115T120402Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch 5120, vision offload, cpu_stage_threads 6, threads 7 |
-| 2 | [results/20261115T115658Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/20261115T115658Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch 4096, vision offload, cpu_stage_threads 6, threads 7 |
-| 3 | [results/20261115T115017Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/20261115T115017Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts true, batch 4096, vision offload |
 | 1 | [results/20261115T114428Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/20261115T114428Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch 4096 |
 | 2 | [results/20261115T115017Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/20261115T115017Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts true, batch 4096, vision offload |
 | 3 | [results/20261115T115658Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/20261115T115658Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch 4096, vision offload, cpu_stage_threads 6, threads 7 |
 | 4 | [results/20261115T120402Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/20261115T120402Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch 5120, vision offload, cpu_stage_threads 6, threads 7 |
 | 5 | [results/20261115T122705Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/20261115T122705Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch 5120, vision offload, cpu_stage_threads 6, threads 7, swizzle -1 |
 | 6 | [results/20261115T123728Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/20261115T123728Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch 5120, vision offload, cpu_stage_threads 6, threads 7, wide -1 |
+| 7 | [results/20261115T124540Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/20261115T124540Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch 5120, vision offload, cpu_stage_threads 6, threads 7, gdn_sub_chunk 2048 |
+| 8 | [results/20261115T125239Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/20261115T125239Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch 5120, vision offload, cpu_stage_threads 6, threads 7, bc_gdn -1 |
 
 ---
 
