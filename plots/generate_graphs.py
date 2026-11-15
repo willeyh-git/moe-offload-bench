@@ -15,8 +15,7 @@ OUTPUT_DIR = "/home/willyhetland/Storage/code/moe-offload-bench"
 files = sorted([
     f for f in os.listdir(RESULTS_DIR)
     if f.startswith("20261115") and "qwen3-6-35b" in f
-])
-files.reverse()  # oldest first
+])  # ISO timestamp prefix -> chronological, oldest first
 
 runs = []
 for f in files:
