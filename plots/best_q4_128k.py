@@ -29,11 +29,11 @@ RUNS = [
         "decode": [94.0, 92.3, 104.5, 82.6, 73.1, 61.7, 57.3],
     },
     {
-        # Qwen3.6 winner: EXL3 4.0 bpw + DFlash2, 2 drafts (11:44Z aside)
-        "label": "Qwen3.6-35B-A3B — EXL3 4.0 bpw + DFlash2 (2 drafts) — exllamav3 (11:44Z)",
+        # Qwen3.6 winner: EXL3 4.0 bpw, no-spec, tweaked baseline (12:59Z FULL RUN)
+        "label": "Qwen3.6-35B-A3B — EXL3 4.0 bpw, no-spec — exllamav3 (tweaked, 12:59Z)",
         "color": "#1f77b4",
-        "prefill": [1463.0, 1534.3, 1492.1, 1398.3, 1312.4, 1245.6],
-        "decode": [105.4, 107.0, 98.9, 93.0, 86.3, 80.1, 71.6],
+        "prefill": [2314, 2566, 2606, 2411, 2178, 2009],
+        "decode": [109.4, 110.0, 103.9, 101.3, 93.2, 89.5, 82.8],
     },
     {
         # QFN Coder (only run): Polystrata nov-7, --spec 2
