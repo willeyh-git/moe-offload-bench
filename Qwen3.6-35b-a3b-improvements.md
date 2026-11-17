@@ -122,17 +122,17 @@ Full benchmark JSONs are stored in the `results/` directory:
 |---|------|-----|
 | # | File | Tag |
 |---|------|-----|
-| 0 | [results/20261115T112713Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/20261115T112713Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch increase (no cpu_stage_threads) |
-| 1 | [results/20261115T114428Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/20261115T114428Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch 4096 |
-| 2 | [results/20261115T115017Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/20261115T115017Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts true, batch 4096, vision offload |
-| 3 | [results/20261115T115658Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/20261115T115658Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch 4096, vision offload, cpu_stage_threads 6, threads 7 |
-| 4 | [results/20261115T120402Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/20261115T120402Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch 5120, vision offload, cpu_stage_threads 6, threads 7 |
-| 5 | [results/20261115T122705Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/20261115T122705Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch 5120, vision offload, cpu_stage_threads 6, threads 7, swizzle -1 |
-| 6 | [results/20261115T123728Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/20261115T123728Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch 5120, vision offload, cpu_stage_threads 6, threads 7, wide -1 |
-| 7 | [results/20261115T124540Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/20261115T124540Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch 5120, vision offload, cpu_stage_threads 6, threads 7, gdn_sub_chunk 2048 |
-| 8 | [results/20261115T125239Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/20261115T125239Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch 5120, vision offload, cpu_stage_threads 6, threads 7, bc_gdn -1 |
-| 9 | [results/20261115T125911Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/20261115T125911Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch 5120, vision offload, cpu_stage_threads 6, threads 7, FULL RUN (4k→128k), MTP (2) |
-| 10 | [results/20261117T095948Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/20261117T095948Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch 6144, vision offload, cpu_stage_threads 6, threads 7, FULL RUN (4k→128k), MTP (2) |
+| 0 | [results/20261115T112713Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/qwen/20261115T112713Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch increase (no cpu_stage_threads) |
+| 1 | [results/20261115T114428Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/qwen/20261115T114428Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch 4096 |
+| 2 | [results/20261115T115017Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/qwen/20261115T115017Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts true, batch 4096, vision offload |
+| 3 | [results/20261115T115658Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/qwen/20261115T115658Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch 4096, vision offload, cpu_stage_threads 6, threads 7 |
+| 4 | [results/20261115T120402Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/qwen/20261115T120402Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch 5120, vision offload, cpu_stage_threads 6, threads 7 |
+| 5 | [results/20261115T122705Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/qwen/20261115T122705Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch 5120, vision offload, cpu_stage_threads 6, threads 7, swizzle -1 |
+| 6 | [results/20261115T123728Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/qwen/20261115T123728Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch 5120, vision offload, cpu_stage_threads 6, threads 7, wide -1 |
+| 7 | [results/20261115T124540Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/qwen/20261115T124540Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch 5120, vision offload, cpu_stage_threads 6, threads 7, gdn_sub_chunk 2048 |
+| 8 | [results/20261115T125239Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/qwen/20261115T125239Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch 5120, vision offload, cpu_stage_threads 6, threads 7, bc_gdn -1 |
+| 9 | [results/20261115T125911Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/qwen/20261115T125911Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch 5120, vision offload, cpu_stage_threads 6, threads 7, FULL RUN (4k→128k), MTP (2) |
+| 10 | [results/20261117T095948Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/qwen/20261117T095948Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch 6144, vision offload, cpu_stage_threads 6, threads 7, FULL RUN (4k→128k), MTP (2) |
 
 ---
 

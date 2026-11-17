@@ -116,7 +116,7 @@ per-model files.
 See [ORNITH1.5-35B-A3B.md](ORNITH1.5-35B-A3B.md) — canonical, superseded and
 stale runs annotated there.
 
-### `results/qwen/` — Qwen3.6-35B-A3B (18 files)
+### `results/qwen/` — Qwen3.6-35B-A3B (28 files)
 
 - `20261112T155239Z-qwen3-6-35b-a3b-ud-q4-k-xl.json` (UD Q4_K_XL, PolyStrata)
 - `20261112T151400Z-qwen3-6-35b-a3b-ud-q4-k-xl.json` (UD Q4_K_XL, Strata Unsloth build)
@@ -124,7 +124,9 @@ stale runs annotated there.
 - `20261112T132841Z-qwen-3-6-q4-llama.json` (llama.cpp MTP)
 - 13 × `exllamav3-20261112T…-q{4,5,6}-exl3-*.json` (EXL3 4.00/5.00/6.00 bpw; no-spec /
   MTP / DFlash2 short-range runs plus 2-draft asides)
-- `20261117T095948Z-qwen3-6-35b-a3b-exl3-4-00bpw.json` (tweaked baseline, batch 6144, MTP 2, 4k→128k)
+- 11 × `20261115T…Z-…-exl3-4-00bpw.json` / `20261117T095948Z-…json` (tweak-bake-off runs
+  0–9 from 2026-11-15 plus the 2026-11-17 batch-6144 re-run — see
+  [Qwen3.6-35b-a3b-improvements.md](Qwen3.6-35b-a3b-improvements.md) for tags)
 
 See [QWEN3.6-35B-A3B.md](QWEN3.6-35B-A3B.md) for the full annotated list.
 

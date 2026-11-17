@@ -274,8 +274,8 @@ vs the original 4.00 bpw aside runs (2 draft tokens):
 - **At 128k: prefill 2 009 tok/s, decode 82.8 tok/s** — beats the DFlash2
   aside at 128k (1 246 / 71.6) and matches the MTP aside (1 211 / 83.3).
 
-Raw: [results/20261115T125911Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/20261115T125911Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) (batch 5120),
-[results/20261117T095948Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/20261117T095948Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) (batch 6144)
+Raw: [results/20261115T125911Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/qwen/20261115T125911Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) (batch 5120),
+[results/20261117T095948Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/qwen/20261117T095948Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) (batch 6144)
 
 ## GGUF runs — UD Q4_K_XL (llama.cpp, Strata, PolyStrata)
 

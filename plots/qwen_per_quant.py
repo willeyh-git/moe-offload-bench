@@ -1,6 +1,9 @@
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+import os
+
+HERE = os.path.dirname(os.path.abspath(__file__))  # plots/
 
 # Qwen3.6-35B-A3B on ExLlamaV3 (Radeon 9070 XT), 2026-11-12 runs.
 # One figure per quant; 3 spec modes each (none / MTP / DFlash2), plus
@@ -139,5 +142,5 @@ for q in quants.values():
     ax2.set_xlabel("Prompt / context length")
     fig.suptitle(f"{q['title']} — {q.get('sub', 'ExLlamaV3, Radeon 9070 XT (2026-11-12)}')}")
     fig.tight_layout()
-    fig.savefig(q["out"], dpi=200)
+    fig.savefig(os.path.join(HERE, q["out"]), dpi=200)
     print("saved", q["out"])

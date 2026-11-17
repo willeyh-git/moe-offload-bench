@@ -9,7 +9,7 @@ import matplotlib.ticker as ticker
 import os
 
 RESULTS_DIR = "/home/willyhetland/Storage/code/llm-bench/results"
-OUTPUT_DIR = "/home/willyhetland/Storage/code/moe-offload-bench"
+OUTPUT_DIR = "/home/willyhetland/Storage/code/moe-offload-bench/plots"
 
 # Load all Qwen3.6-35B-A3B tweak runs (2026-11-15 bake-off + 2026-11-17 batch 6144)
 files = sorted([
