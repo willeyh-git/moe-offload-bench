@@ -1,5 +1,6 @@
 # EXLLMV3 Config
 
+```YAML
 network:
   host: 0.0.0.0
   port: 8096
@@ -40,4 +41,4 @@ draft_model:
   min_p: { override: 0.0, force: false }
   presence_penalty: { override: 0.0, force: false }
   repetition_penalty: { override: 1.0, force: false }
-
+```
