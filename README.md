@@ -88,6 +88,7 @@ bpw / UD Q4_K_XL GGUF); QFn Coder is IQ1_M, included for reference.
 | Qwen3.6-35B-A3B | EXL3 4.0 bpw, MTP (2), chunk 5120 / exllamav3 (tweaked) | **2 009 tok/s** | **82.8 tok/s** |
 | Qwen3.8-Flash-Next Coder | IQ1_M / Polystrata nov-7 `--spec 2` | 1 572 tok/s | 44.0 tok/s |
 | KAT-Coder V2.5 Dev (MTP) | EXL3 5.0 bpw (hq), MTP (2), chunk 5120 / exllamav3 (tweaked)‡ | **1 203 tok/s** | **53.6 tok/s** |
+| Nemotron 3.5 Lightning 30B-A3B | EXL3 3.25 bpw, Q8 cache, no-spec / exllamav3§ | **2 973 tok/s** | **78.8 tok/s** |
 
 Excluded for not reaching 128k: llama.cpp Qwen3.6 runs and the exllamav3
 short-range Qwen3.6 runs (~32k max). QFn Coder has a single eligible run, so
@@ -107,6 +108,11 @@ short- and mid-context decode is roughly flat vs that run.
 ‡ KAT-Coder's 96k/128k decode medians rest on 2 runs each, and
 `cpu_moe_split_experts: 190` is the OOM floor (anything lower does not start);
 see [KAT-Coder.md](KAT-Coder.md) for the run and the vs-baseline comparison.
+
+§ Nemotron 3.5 Lightning's 96k/128k decode medians rest on 2 runs each; the
+prior same-day run (2026-11-17 14:19Z) stopped short of 128k, so the winner
+above is the 15:12Z run with max_context 153 600 (see
+[NEMOTRON3.5-LIGHTNING.md](NEMOTRON3.5-LIGHTNING.md)).
 
 Generated with [`plots/best_q4_128k.py`](plots/best_q4_128k.py)
 (`uv run --with matplotlib python best_q4_128k.py`).
@@ -143,3 +149,10 @@ See [QWEN3.6-35B-A3B.md](QWEN3.6-35B-A3B.md) for the full annotated list.
 
 - `20261117T113004Z-kat-coder-v2-5-dev-mtp-exl3-5bpw-hq.json` (EXL3 5.0 bpw hq, MTP 2, chunk 5120 + cpu_stage_threads 6, `cpu_moe_split_experts` 190 — the tweaked full run, [KAT-Coder.md](KAT-Coder.md))
 - `20261113T150956Z-kat-coder-v2-5-dev-mtp-exl3-5bpw-hq.json` ("13 GB vram" baseline full run, same md)
+
+### `results/nemotron/` — Nemotron 3.5 Lightning 30B-A3B (1 file)
+
+- `20261117T151238Z-nemotron-3-5-lightning-exl3-3-25.json` (EXL3 3.25 bpw,
+  expert offload 5, chunk 4096, Q8 cache, max_context 153 600 —
+  [NEMOTRON3.5-LIGHTNING.md](NEMOTRON3.5-LIGHTNING.md)); the 14:19Z attempt
+  that stopped before 128k is intentionally not copied
