@@ -1,5 +1,5 @@
 # Polystrata Config
-
+```JSON
 {
   "exe": "/PolyStrata/engine-poly/strata-poly",
   "args": [
@@ -33,4 +33,4 @@
     "min_p": 0.00
   }
 }
-
+```
