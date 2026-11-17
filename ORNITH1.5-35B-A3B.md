@@ -71,6 +71,59 @@ comes from two early-stop runs (140/170 tokens), its only such context this run.
 Linear axes; short-context decode (prompt ~16 tok) plotted at the left edge.
 Generated with `plots/make_plots.py` (`python3` + matplotlib).
 
+### ExLlamaV3 re-run on the tweaked baseline (2026-11-15)
+
+The exllamav3 side was re-run on 2026-11-15 with the Qwen3.6-35B-A3B tweak
+baseline applied (chunk 5120 + output chunking, vision offload, pinned arena
+off, `EXL3_MOE_CPU_STAGE_THREADS=6`, `cpu_moe_threads: 7`; CPU expert offload
+`cpu_moe_split_experts: 108` kept from the original Ornith config). Two full
+runs were taken:
+
+- **13:55Z — "FULL RUN"** — config set no draft option (the DFlash2 drafter
+  file was in the model dir); per the run tag, spec was off. See
+  [ornith-1-5-tweaks.md](ornith-1-5-tweaks.md) for config and caveats.
+- **14:31Z — "FULL RUN dflash2 num tokens 4"** — config pointed at
+  `Ornith-1.5-35B-A3B-DFlash2-EXL3-3.0bpw` (`draft_type: model`, 4 draft tokens).
+
+| Prompt length | pre-tune 20:53Z | tweaked 13:55Z | tweaked DFlash2-4 14:31Z |
+| ---: | ---: | ---: | ---: |
+| 4 000 | 1 293 (3.20) | **2 294** (1.81) | 2 455 (1.69) |
+| 16 000 | 1 356 (12.02) | 2 406 (6.77) | **2 682** (6.08) |
+| 32 000 | 1 344 (24.32) | 2 473 (13.22) | **2 780** (11.76) |
+| 64 000 | 1 279 (51.11) | 2 310 (28.30) | **2 528** (25.86) |
+| 96 000 | 1 222 (80.65) | 1 998 (49.31) n=2 | **2 189** (45.01) n=2 |
+| 128 000 | 1 168 (110.41) | 1 925 (67.02) n=2 | **2 111** (61.09) n=2 |
+
+Prefill: a **+49% / +81% improvement at 128k** vs the pre-tune 20:53Z run
+(1 925 / 2 111 vs 1 168 tok/s; chunk 5120 + output chunking on the new fork). Decode median (tok/s):
+
+| Context | pre-tune 20:53Z | tweaked 13:55Z | tweaked DFlash2-4 14:31Z |
+| ---: | ---: | ---: | ---: |
+| ~16 (short) | **94.0** | 91.8 | 83.8 |
+| 4 000 | **92.3** | 93.8 | 78.8 * |
+| 16 000 | **104.5** | 99.6 | 93.2 |
+| 32 000 | 82.6 | **86.3** * | 76.9 |
+| 64 000 | 73.1 | **72.7** | 70.7 |
+| 96 000 | 61.7 | **59.7** n=2 | 49.8 n=2 |
+| 128 000 | **57.3** | 55.7 n=2 | 48.2 n=2 |
+
+* 13:55Z 32k median has +1 short stop run (197/205/221 of 512 requested);
+  14:31Z 4k has +1 short stop (33 of 512). Flagged in the JSON.
+
+Takeaway: the tweaked baseline in particular drops the **prefill**
+result (1 925 vs 1 168 tok/s at 128k; 2 111 with DFlash2), while decode is
+largely flat at 32k–64k, slightly behind at short/4k, and worse with the
+DFlash2 drafter enabled (−16% at short). The DFlash2-drafter run's prefill
+being *faster* than the tagged-no-spec run's is unexplained — see
+[ornith-1-5-tweaks.md](ornith-1-5-tweaks.md) for the caveat that the
+13:55Z run's spec state was not explicitly recorded and the 96k/128k
+decode medians rest on 2 runs.
+
+Raw JSONs:
+
+- `results/ornith/exllamav3-20261115T135554Z-ornith-1-5-35b-a3b-exl3-4-00bpw-24gb-tuned.json`
+- `results/ornith/exllamav3-20261115T143144Z-ornith-1-5-35b-a3b-exl3-4-00bpw-24gb-tuned-dflash2.json`
+
 ## Findings
 
 1. **Short context: exllamav3 and Polystrata are effectively tied** — 94.0 vs
@@ -163,6 +216,8 @@ the llm-bench protocol above.
 - `results/ornith/polystrata-20261111T211316Z-ornith-1-5-35b-a3b-apex-i-quality.json` (canonical)
 - `results/ornith/llamacpp-20261111T230253Z-ornith-1-5-35b-a3b-apex-i-quality-mtp.json` (canonical MTP, full range — current 23:02Z run)
 - `results/ornith/llamacpp-ornith-1-5-35b-a3b-apex-i-quality-mtp.json` (superseded; earlier 19:56Z run, 4k/16k only)
+- `results/ornith/exllamav3-20261115T135554Z-ornith-1-5-35b-a3b-exl3-4-00bpw-24gb-tuned.json` (tweaked baseline, "FULL RUN" — spec state unverified, see ornith-1-5-tweaks.md)
+- `results/ornith/exllamav3-20261115T143144Z-ornith-1-5-35b-a3b-exl3-4-00bpw-24gb-tuned-dflash2.json` (tweaked baseline + DFlash2 4-draft)
 - `results/ornith/exllamav3-20261111T155934Z-ornith-1-5-35b-a3b-exl3-4-00bpw-24gb.json` (superseded)
 - `results/ornith/exllamav3-20261111T145111Z-ornith-1-5-35b-a3b-exl3-4-00bpw-24gb.json` (stale run, ~35 tok/s short decode)
 - `results/ornith/llamacpp-ornith-1-5-35b-a3b-apex-i-quality-no-mtp.json` (superseded, earlier 19:45Z run, 4k/16k only)

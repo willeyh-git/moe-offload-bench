@@ -22,11 +22,14 @@ decode_ticks = ["~16/90/243", "4k", "16k", "32k", "64k", "96k", "128k"]
 
 RUNS = [
     {
-        # Ornith winner: exllamav3 EXL3 4.0 bpw + DFlash2 (canonical 20:53Z)
-        "label": "Ornith 1.5 35B-A3B — EXL3 4.0 bpw + DFlash2 — exllamav3 (20:53Z)",
+        # Ornith winner: exllamav3 EXL3 4.0 bpw, tweaked no-specish baseline
+        # (FULL RUN 13:55Z; 96k/128k decode on 2 runs each — see
+        # ornith-1-5-tweaks.md). Beats old DFlash2 winner 1168 + 57.3 = 1725
+        # by 1924.5 + 55.7 = 2480.
+        "label": "Ornith 1.5 35B-A3B — EXL3 4.0 bpw, no-spec tweaked — exllamav3 (13:55Z)",
         "color": "#d62728",
-        "prefill": [1293, 1356, 1344, 1279, 1222, 1168],
-        "decode": [94.0, 92.3, 104.5, 82.6, 73.1, 61.7, 57.3],
+        "prefill": [2293.7, 2405.7, 2473.1, 2310.5, 1998.1, 1924.5],
+        "decode": [91.8, 93.8, 99.6, 86.3, 72.7, 59.7, 55.7],
     },
     {
         # Qwen3.6 winner: EXL3 4.0 bpw, no-spec, tweaked baseline (12:59Z FULL RUN)
