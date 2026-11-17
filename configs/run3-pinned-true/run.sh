@@ -1,5 +1,5 @@
 #!/bin/bash
-# Run 3 — pinned experts true, batch 4096, vision offload
+# Run 3 — pinned experts true, chunk 4096, vision offload
 set -euo pipefail
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
 export EXL3_QC_STAGING=${EXL3_QC_STAGING:-1}

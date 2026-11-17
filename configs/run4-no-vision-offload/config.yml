@@ -1,4 +1,4 @@
-# Run 4 — pinned experts false, batch 4096 (baseline, no vision offload)
+# Run 4 — pinned experts false, chunk 4096 (baseline, no vision offload)
 network:
   host: 0.0.0.0
   port: 8096

@@ -33,17 +33,17 @@ RUNS = [
     },
     {
         # Qwen3.6 winner: EXL3 4.0 bpw, MTP (2 draft tokens, no external
-        # drafter) on the tweaked baseline, batch 5120 (12:59Z FULL RUN)
+        # drafter) on the tweaked baseline, chunk 5120 (12:59Z FULL RUN)
         # 128k total 2 009 + 82.8 = 2 092.
-        "label": "Qwen3.6-35B-A3B — EXL3 4.0 bpw, MTP (2), batch 5120 — exllamav3 (tweaked, 12:59Z)",
+        "label": "Qwen3.6-35B-A3B — EXL3 4.0 bpw, MTP (2), chunk 5120 — exllamav3 (tweaked, 12:59Z)",
         "color": "#1f77b4",
         "prefill": [2314, 2566, 2606, 2411, 2178, 2009],
         "decode": [109.4, 110.0, 103.9, 101.3, 93.2, 89.5, 82.8],
     },
     {
-        # 2026-11-17 re-run of the tweaked baseline with batch 6144 —
+        # 2026-11-17 re-run of the tweaked baseline with chunk 6144 —
         # within ~2% of the winner everywhere (128k total 2 079), not a win.
-        "label": "Qwen3.6-35B-A3B — EXL3 4.0 bpw, MTP (2), batch 6144 — exllamav3 (tweaked, 11-17)",
+        "label": "Qwen3.6-35B-A3B — EXL3 4.0 bpw, MTP (2), chunk 6144 — exllamav3 (tweaked, 11-17)",
         "color": "#9ecae1",
         "prefill": [2290.7, 2589.1, 2538.6, 2374.7, 2173.8, 1997.7],
         "decode": [108.6, 109.7, 106.8, 102.2, 94.0, 88.1, 81.6],

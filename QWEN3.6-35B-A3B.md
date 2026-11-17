@@ -216,7 +216,7 @@ run.)
 
 ## Improved baseline — full range 4k→128k (2026-11-15)
 
-A follow-up full-range run with the improved baseline config (batch 5120,
+A follow-up full-range run with the improved baseline config (chunk 5120,
 cpu_stage_threads 6, pinned_arena false, vision_offload true) — MTP speculation
 (2 draft tokens, no external drafter), no GDN/swizzle flags. See
 [Qwen3.6-35b-a3b-improvements.md](Qwen3.6-35b-a3b-improvements.md)
@@ -238,12 +238,12 @@ for the full comparison of tweak flags.
 | Prefill 96k TPS | 2178 (TTFT 45.24 s) |
 | Prefill 128k TPS | 2009 (TTFT 64.20 s) |
 
-### Batch 6144 re-run (2026-11-17 09:59Z)
+### Chunk 6144 re-run (2026-11-17 09:59Z)
 
-Same tweaked baseline with the batch size raised 5120 → 6144 (same MTP 2
+Same tweaked baseline with the chunk size raised 5120 → 6144 (same MTP 2
 drafter). GPU peaked at **15.3 GB VRAM**, ~260 W.
 
-| Metric | Value | Δ vs batch 5120 |
+| Metric | Value | Δ vs chunk 5120 |
 | --- | --- | --- |
 | Decode TPS (med, short) | 108.56 (102.87–110.01) | −0.7% |
 | Decode @4k (med) | 109.73 (108.26–112.85) | −0.2% |
@@ -259,8 +259,8 @@ drafter). GPU peaked at **15.3 GB VRAM**, ~260 W.
 | Prefill 96k TPS | 2 174 (TTFT 45.32 s) | −0.2% |
 | Prefill 128k TPS | 1 998 (TTFT 64.57 s) | −0.6% |
 
-Within ~1–2% of the batch-5120 winner at every context — the larger batch buys
-nothing, so the batch-5120 config stays the reference (128k total 2 092 vs
+Within ~1–2% of the chunk-5120 winner at every context — the larger chunk buys
+nothing, so the chunk-5120 config stays the reference (128k total 2 092 vs
 2 079).
 
 vs the original 4.00 bpw aside runs (2 draft tokens):
@@ -274,8 +274,8 @@ vs the original 4.00 bpw aside runs (2 draft tokens):
 - **At 128k: prefill 2 009 tok/s, decode 82.8 tok/s** — beats the DFlash2
   aside at 128k (1 246 / 71.6) and matches the MTP aside (1 211 / 83.3).
 
-Raw: [results/20261115T125911Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/qwen/20261115T125911Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) (batch 5120),
-[results/20261117T095948Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/qwen/20261117T095948Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) (batch 6144)
+Raw: [results/20261115T125911Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/qwen/20261115T125911Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) (chunk 5120),
+[results/20261117T095948Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/qwen/20261117T095948Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) (chunk 6144)
 
 ## GGUF runs — UD Q4_K_XL (llama.cpp, Strata, PolyStrata)
 

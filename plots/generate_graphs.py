@@ -11,7 +11,7 @@ import os
 RESULTS_DIR = "/home/willyhetland/Storage/code/llm-bench/results"
 OUTPUT_DIR = "/home/willyhetland/Storage/code/moe-offload-bench/plots"
 
-# Load all Qwen3.6-35B-A3B tweak runs (2026-11-15 bake-off + 2026-11-17 batch 6144)
+# Load all Qwen3.6-35B-A3B tweak runs (2026-11-15 bake-off + 2026-11-17 chunk 6144)
 files = sorted([
     f for f in os.listdir(RESULTS_DIR)
     if f.startswith(("20261115", "20261117")) and "qwen3-6-35b" in f
@@ -26,11 +26,11 @@ for f in files:
 # Extract key metrics
 labels = [r["tag"] for r in runs]
 short_labels = [
-    "batch inc\nno cpu_threads",
-    "batch 4096\npinned false",
+    "chunk inc\nno cpu_threads",
+    "chunk 4096\npinned false",
     "pinned true",
-    "batch 4096\ncpu_threads 6",
-    "batch 5120\ncpu_threads 6",
+    "chunk 4096\ncpu_threads 6",
+    "chunk 5120\ncpu_threads 6",
     "swizzle -1",
     "wide -1",
     "gdn_sub 2048",

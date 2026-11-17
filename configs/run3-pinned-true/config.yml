@@ -1,4 +1,4 @@
-# Run 3 — pinned experts true, batch 4096, vision offload
+# Run 3 — pinned experts true, chunk 4096, vision offload
 # VRAM: ~13.5 GB (lowest, but also lowest performance)
 network:
   host: 0.0.0.0

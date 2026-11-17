@@ -6,8 +6,8 @@ Each run has its own config directory under `configs/` with a `config.yml` and `
 
 | Run | Directory | Key Differences |
 |-----|-----------|-----------------|
-| 1 | [configs/run1-batch5120/](configs/run1-batch5120/) | chunk_size 5120, pinned_arena false, vision_offload true, threads 7 |
-| 2 | [configs/run2-batch4096/](configs/run2-batch4096/) | chunk_size 4096, pinned_arena false, vision_offload true, threads 7 |
+| 1 | [configs/run1-chunk5120/](configs/run1-chunk5120/) | chunk_size 5120, pinned_arena false, vision_offload true, threads 7 |
+| 2 | [configs/run2-chunk4096/](configs/run2-chunk4096/) | chunk_size 4096, pinned_arena false, vision_offload true, threads 7 |
 | 3 | [configs/run3-pinned-true/](configs/run3-pinned-true/) | chunk_size 4096, pinned_arena **true**, vision_offload true |
 | 4 | [configs/run4-no-vision-offload/](configs/run4-no-vision-offload/) | chunk_size 4096, pinned_arena false, vision_offload **false** |
 
@@ -21,17 +21,17 @@ All runs share `EXL3_QC_STAGING=1` and `EXL3_GDN_REPLAY=1`. Runs 2–4 were laun
 
 | # | Timestamp | Tag | Chunk Size | Pinned Arena | VRAM | Decode TPS (med) | Decode @4k (med) | Decode @16k (med) | Decode @32k (med) |
 |---|-----------|-----|------------|--------------|------|------------------|------------------|-------------------|-------------------|
-| 0 | 2026-11-15 11:27 | pinned experts false, batch increase (no cpu_stage_threads) | — | false | — | 97.95 | 100.09 | 98.12 | 94.01 |
-| 1 | 2026-11-15 12:04 | pinned experts false, batch 5120, vision offload, cpu_stage_threads 6, threads 7 | 5120 | false | 14.7 GB | **118.94** | **114.67** | **106.98** | **104.13** |
-| 2 | 2026-11-15 11:56 | pinned experts false, batch 4096, vision offload, cpu_stage_threads 6, threads 7 | 4096 | false | 14.5 GB | 117.71 | 115.28 | 108.25 | 101.54 |
-| 3 | 2026-11-15 11:50 | pinned experts true, batch 4096, vision offload | 4096 | true | 13.5 GB | 112.67 | 110.51 | 103.24 | 96.18 |
-| 4 | 2026-11-15 11:44 | pinned experts false, batch 4096 | 4096 | false | — | 106.59 | 107.27 | 103.19 | 97.45 |
-| 5 | 2026-11-15 12:27 | pinned experts false, batch 5120, vision offload, cpu_stage_threads 6, threads 7, **swizzle -1** | 5120 | false | 14.7 GB | 112.36 | 114.36 | 105.67 | 104.29 |
-| 6 | 2026-11-15 12:37 | pinned experts false, batch 5120, vision offload, cpu_stage_threads 6, threads 7, **wide -1** | 5120 | false | 14.7 GB | 107.31 | 113.13 | 103.87 | 102.98 |
-| 7 | 2026-11-15 12:45 | pinned experts false, batch 5120, vision offload, cpu_stage_threads 6, threads 7, **gdn_sub_chunk 2048** | 5120 | false | 14.7 GB | 105.73 | 107.40 | 102.42 | 96.85 |
-| 8 | 2026-11-15 12:52 | pinned experts false, batch 5120, vision offload, cpu_stage_threads 6, threads 7, **bc_gdn -1** | 5120 | false | 14.7 GB | 109.18 | 110.24 | 105.05 | 96.58 |
-| 9 | 2026-11-15 12:59 | pinned experts false, batch 5120, vision offload, cpu_stage_threads 6, threads 7, **FULL RUN** (4k→128k), MTP (2) | 5120 | false | 14.7 GB | 109.37 | 109.97 | 103.90 | 101.28 |
-| 10 | 2026-11-17 09:59 | pinned experts false, batch 6144, vision offload, cpu_stage_threads 6, threads 7, **FULL RUN** (4k→128k), MTP (2) | **6144** | false | 15 GB | 108.56 | 109.73 | 106.81 | 102.15 |
+| 0 | 2026-11-15 11:27 | pinned experts false, chunk increase (no cpu_stage_threads) | — | false | — | 97.95 | 100.09 | 98.12 | 94.01 |
+| 1 | 2026-11-15 12:04 | pinned experts false, chunk 5120, vision offload, cpu_stage_threads 6, threads 7 | 5120 | false | 14.7 GB | **118.94** | **114.67** | **106.98** | **104.13** |
+| 2 | 2026-11-15 11:56 | pinned experts false, chunk 4096, vision offload, cpu_stage_threads 6, threads 7 | 4096 | false | 14.5 GB | 117.71 | 115.28 | 108.25 | 101.54 |
+| 3 | 2026-11-15 11:50 | pinned experts true, chunk 4096, vision offload | 4096 | true | 13.5 GB | 112.67 | 110.51 | 103.24 | 96.18 |
+| 4 | 2026-11-15 11:44 | pinned experts false, chunk 4096 | 4096 | false | — | 106.59 | 107.27 | 103.19 | 97.45 |
+| 5 | 2026-11-15 12:27 | pinned experts false, chunk 5120, vision offload, cpu_stage_threads 6, threads 7, **swizzle -1** | 5120 | false | 14.7 GB | 112.36 | 114.36 | 105.67 | 104.29 |
+| 6 | 2026-11-15 12:37 | pinned experts false, chunk 5120, vision offload, cpu_stage_threads 6, threads 7, **wide -1** | 5120 | false | 14.7 GB | 107.31 | 113.13 | 103.87 | 102.98 |
+| 7 | 2026-11-15 12:45 | pinned experts false, chunk 5120, vision offload, cpu_stage_threads 6, threads 7, **gdn_sub_chunk 2048** | 5120 | false | 14.7 GB | 105.73 | 107.40 | 102.42 | 96.85 |
+| 8 | 2026-11-15 12:52 | pinned experts false, chunk 5120, vision offload, cpu_stage_threads 6, threads 7, **bc_gdn -1** | 5120 | false | 14.7 GB | 109.18 | 110.24 | 105.05 | 96.58 |
+| 9 | 2026-11-15 12:59 | pinned experts false, chunk 5120, vision offload, cpu_stage_threads 6, threads 7, **FULL RUN** (4k→128k), MTP (2) | 5120 | false | 14.7 GB | 109.37 | 109.97 | 103.90 | 101.28 |
+| 10 | 2026-11-17 09:59 | pinned experts false, chunk 6144, vision offload, cpu_stage_threads 6, threads 7, **FULL RUN** (4k→128k), MTP (2) | **6144** | false | 15 GB | 108.56 | 109.73 | 106.81 | 102.15 |
 
 > **Run 10 (2026-11-17 09:59) power & VRAM:** GPU at ~260 W, VRAM max ~15.3 GB.
 >
@@ -122,17 +122,17 @@ Full benchmark JSONs are stored in the `results/` directory:
 |---|------|-----|
 | # | File | Tag |
 |---|------|-----|
-| 0 | [results/20261115T112713Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/qwen/20261115T112713Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch increase (no cpu_stage_threads) |
-| 1 | [results/20261115T114428Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/qwen/20261115T114428Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch 4096 |
-| 2 | [results/20261115T115017Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/qwen/20261115T115017Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts true, batch 4096, vision offload |
-| 3 | [results/20261115T115658Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/qwen/20261115T115658Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch 4096, vision offload, cpu_stage_threads 6, threads 7 |
-| 4 | [results/20261115T120402Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/qwen/20261115T120402Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch 5120, vision offload, cpu_stage_threads 6, threads 7 |
-| 5 | [results/20261115T122705Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/qwen/20261115T122705Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch 5120, vision offload, cpu_stage_threads 6, threads 7, swizzle -1 |
-| 6 | [results/20261115T123728Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/qwen/20261115T123728Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch 5120, vision offload, cpu_stage_threads 6, threads 7, wide -1 |
-| 7 | [results/20261115T124540Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/qwen/20261115T124540Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch 5120, vision offload, cpu_stage_threads 6, threads 7, gdn_sub_chunk 2048 |
-| 8 | [results/20261115T125239Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/qwen/20261115T125239Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch 5120, vision offload, cpu_stage_threads 6, threads 7, bc_gdn -1 |
-| 9 | [results/20261115T125911Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/qwen/20261115T125911Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch 5120, vision offload, cpu_stage_threads 6, threads 7, FULL RUN (4k→128k), MTP (2) |
-| 10 | [results/20261117T095948Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/qwen/20261117T095948Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch 6144, vision offload, cpu_stage_threads 6, threads 7, FULL RUN (4k→128k), MTP (2) |
+| 0 | [results/20261115T112713Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/qwen/20261115T112713Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, chunk increase (no cpu_stage_threads) |
+| 1 | [results/20261115T114428Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/qwen/20261115T114428Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, chunk 4096 |
+| 2 | [results/20261115T115017Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/qwen/20261115T115017Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts true, chunk 4096, vision offload |
+| 3 | [results/20261115T115658Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/qwen/20261115T115658Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, chunk 4096, vision offload, cpu_stage_threads 6, threads 7 |
+| 4 | [results/20261115T120402Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/qwen/20261115T120402Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, chunk 5120, vision offload, cpu_stage_threads 6, threads 7 |
+| 5 | [results/20261115T122705Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/qwen/20261115T122705Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, chunk 5120, vision offload, cpu_stage_threads 6, threads 7, swizzle -1 |
+| 6 | [results/20261115T123728Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/qwen/20261115T123728Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, chunk 5120, vision offload, cpu_stage_threads 6, threads 7, wide -1 |
+| 7 | [results/20261115T124540Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/qwen/20261115T124540Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, chunk 5120, vision offload, cpu_stage_threads 6, threads 7, gdn_sub_chunk 2048 |
+| 8 | [results/20261115T125239Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/qwen/20261115T125239Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, chunk 5120, vision offload, cpu_stage_threads 6, threads 7, bc_gdn -1 |
+| 9 | [results/20261115T125911Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/qwen/20261115T125911Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, chunk 5120, vision offload, cpu_stage_threads 6, threads 7, FULL RUN (4k→128k), MTP (2) |
+| 10 | [results/20261117T095948Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/qwen/20261117T095948Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, chunk 6144, vision offload, cpu_stage_threads 6, threads 7, FULL RUN (4k→128k), MTP (2) |
 
 ---
 

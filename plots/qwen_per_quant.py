@@ -20,8 +20,8 @@ quants = {
             "none":      [1643.1, 1657.3, 1612.2],
             "MTP":       [1380.3, 1433.5, 1402.4],
             "DFlash2":   [1307.0, 1370.0, 1361.0],
-            "MTP (2), batch 5120 (tweaked)": [2314, 2566, 2606, 2411, 2178, 2009],
-            "MTP (2), batch 6144 (tweaked)": [2290.7, 2589.1, 2538.6, 2374.7, 2173.8, 1997.7],
+            "MTP (2), chunk 5120 (tweaked)": [2314, 2566, 2606, 2411, 2178, 2009],
+            "MTP (2), chunk 6144 (tweaked)": [2290.7, 2589.1, 2538.6, 2374.7, 2173.8, 1997.7],
             "MTP (2 drafts)": [1419.8, 1473.0, 1438.6, 1351.7, 1273.3, 1211.2],
             "DFlash2 (2 drafts)": [1463.0, 1534.3, 1492.1, 1398.3, 1312.4, 1245.6],
         },
@@ -29,8 +29,8 @@ quants = {
             "none":      [77.5, 76.8, 74.2, 71.5],
             "MTP":       [102.3, 102.8, 101.0, 98.0],
             "DFlash2":   [113.0, 105.2, 98.4, 92.2],
-            "MTP (2), batch 5120 (tweaked)": [109.4, 110.0, 103.9, 101.3, 93.2, 89.5, 82.8],
-            "MTP (2), batch 6144 (tweaked)": [108.6, 109.7, 106.8, 102.2, 94.0, 88.1, 81.6],
+            "MTP (2), chunk 5120 (tweaked)": [109.4, 110.0, 103.9, 101.3, 93.2, 89.5, 82.8],
+            "MTP (2), chunk 6144 (tweaked)": [108.6, 109.7, 106.8, 102.2, 94.0, 88.1, 81.6],
             "MTP (2 drafts)": [112.8, 113.2, 105.0, 100.7, 93.6, 91.7, 83.3],
             "DFlash2 (2 drafts)": [105.4, 107.0, 98.9, 93.0, 86.3, 80.1, 71.6],
         },
@@ -96,12 +96,12 @@ quants = {
 }
 
 # draw order, color, line style
-order = ["none", "MTP (2), batch 5120 (tweaked)", "MTP (2), batch 6144 (tweaked)", "MTP", "DFlash2", "PolyStrata", "MTP (2 drafts)", "DFlash2 (2 drafts)"]
-colors = {"none": "#2ca02c", "MTP (2), batch 5120 (tweaked)": "#000000",
-          "MTP (2), batch 6144 (tweaked)": "#ff7f0e", "MTP": "#e00080", "DFlash2": "#1f77b4",
+order = ["none", "MTP (2), chunk 5120 (tweaked)", "MTP (2), chunk 6144 (tweaked)", "MTP", "DFlash2", "PolyStrata", "MTP (2 drafts)", "DFlash2 (2 drafts)"]
+colors = {"none": "#2ca02c", "MTP (2), chunk 5120 (tweaked)": "#000000",
+          "MTP (2), chunk 6144 (tweaked)": "#ff7f0e", "MTP": "#e00080", "DFlash2": "#1f77b4",
           "PolyStrata": "#9467bd",
           "MTP (2 drafts)": "#c0392b", "DFlash2 (2 drafts)": "#ff7f0e"}
-styles = {"none": "-", "MTP (2), batch 5120 (tweaked)": "-", "MTP (2), batch 6144 (tweaked)": "-", "MTP": "-", "DFlash2": "-", "PolyStrata": "-",
+styles = {"none": "-", "MTP (2), chunk 5120 (tweaked)": "-", "MTP (2), chunk 6144 (tweaked)": "-", "MTP": "-", "DFlash2": "-", "PolyStrata": "-",
           "MTP (2 drafts)": "--", "DFlash2 (2 drafts)": "--"}
 
 

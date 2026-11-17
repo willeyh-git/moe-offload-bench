@@ -63,7 +63,7 @@ Key run-time settings (both runs):
 
 | # | Timestamp | Tag | Draft | VRAM | Short decode (med) | 4k | 16k | 32k | 64k | 96k | 128k |
 |---|-----------|-----|---------|------|--------------------|----|----|-----|-----|-----|------|
-| 1 | 2026-11-15 13:55Z | `pinned experts false and batch increase 5120 vision offload vision off 14.9gb vram cpu_stage_threads 6, threads 7, FULL RUN` | unset (unverified) | 14.9 GB | **91.8** | 93.8 | 99.6 | 86.3* | 72.7 | 59.7 (n=2) | 55.7 (n=2) |
+| 1 | 2026-11-15 13:55Z | `pinned experts false and chunk increase 5120 vision offload vision off 14.9gb vram cpu_stage_threads 6, threads 7, FULL RUN` | unset (unverified) | 14.9 GB | **91.8** | 93.8 | 99.6 | 86.3* | 72.7 | 59.7 (n=2) | 55.7 (n=2) |
 | 2 | 2026-11-15 14:31Z | `… threads 7, FULL RUN dflash2 num tokens 4` | DFlash2, 4tok | 14.9 GB | 83.8 | 78.8* | 93.2 | 76.9 | 70.7 | 49.8 (n=2) | 48.2 (n=2) |
 
 * 13:55Z @32k median includes 3 early-stop runs (197/205/221 of 512);
@@ -151,5 +151,5 @@ Pre-tune exllamav3 20:53Z: 94.0 / 92.3 / 104.5 / 82.6 / 73.1 / 61.7 / 57.3.
 
 | # | File | Tags |
 |---|------|-------------|
-| 1 | [results/ornith/exllamav3-20261115T135554Z-ornith-1-5-35b-a3b-exl3-4-00bpw-24gb-tuned.json](results/ornith/exllamav3-20261115T135554Z-ornith-1-5-35b-a3b-exl3-4-00bpw-24gb-tuned.json) | tuned baseline 5120 batch + vision offload + 14.9 GB VRAM, stage 6 / thread 7, FULL RUN (draft unset) |
+| 1 | [results/ornith/exllamav3-20261115T135554Z-ornith-1-5-35b-a3b-exl3-4-00bpw-24gb-tuned.json](results/ornith/exllamav3-20261115T135554Z-ornith-1-5-35b-a3b-exl3-4-00bpw-24gb-tuned.json) | tuned baseline chunk 5120 + vision offload + 14.9 GB VRAM, stage 6 / thread 7, FULL RUN (draft unset) |
 | 2 | [results/ornith/exllamav3-20261115T143144Z-ornith-1-5-35b-a3b-exl3-4-00bpw-24gb-tuned-dflash2.json](results/ornith/exllamav3-20261115T143144Z-ornith-1-5-35b-a3b-exl3-4-00bpw-24gb-tuned-dflash2.json) | same + DFlash2 drafter 4 draft tokens (draft_type: model) |
