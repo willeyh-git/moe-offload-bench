@@ -49,6 +49,16 @@ RUNS = [
         "decode": [108.6, 109.7, 106.8, 102.2, 94.0, 88.1, 81.6],
     },
     {
+        # Same tweaked baseline at EXL3 5.0 bpw (Q5), chunk 6144 (run tagged
+        # "5120" but 6144 was used), 2026-11-17 17:37Z. 128k total
+        # 1 955 + 75.0 ≈ 2 029.6 < 2 092, so the 4.0 bpw run stays the win.
+        # See QWEN3.6-35B-A3B.md for the section + Δ vs the 4.0 bpw winner.
+        "label": "Qwen3.6-35B-A3B — EXL3 5.0 bpw, MTP (2), chunk 6144 — exllamav3 (tweaked, 17:37Z)",
+        "color": "#e00080",
+        "prefill": [2054.9, 2452.8, 2450.9, 2328.0, 2127.3, 1954.6],
+        "decode": [98.1, 99.3, 93.7, 87.2, 79.3, 79.2, 75.0],
+    },
+    {
         # QFN Coder (only run): Polystrata nov-7, --spec 2
         "label": "Qwen3.8-Flash-Next Coder — IQ1_M — Polystrata nov-7, --spec 2",
         "color": "#2ca02c",

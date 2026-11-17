@@ -26,7 +26,7 @@ for f in files:
 # Extract key metrics
 labels = [r["tag"] for r in runs]
 short_labels = [
-    "chunk inc\nno cpu_threads",
+    "chunk increase\nno cpu_threads",
     "chunk 4096\npinned false",
     "pinned true",
     "chunk 4096\ncpu_threads 6",
@@ -37,6 +37,7 @@ short_labels = [
     "bc_gdn -1",
     "FULL RUN\n5120",
     "FULL RUN\n6144",
+    "Q5 FULL RUN\nchunk 6144",
 ]
 
 prefill_4k = [r["prefill"]["4000"]["tps"] for r in runs]
@@ -64,7 +65,7 @@ bars1 = ax.bar([i - w for i in x], prefill_4k, w, label="4k prompt", color="#4e7
 bars2 = ax.bar(x, prefill_16k, w, label="16k prompt", color="#f28e2b")
 bars3 = ax.bar([i + w for i in x], prefill_32k, w, label="32k prompt", color="#e15759")
 ax.set_ylabel("Tokens/sec")
-ax.set_title("Prefill Performance — Qwen3.6-35B-A3B-exl3-4.00bpw")
+ax.set_title("Prefill Performance — Qwen3.6-35B-A3B tweak bake-off (4.00 bpw; last bar is the 5.00 bpw Q5 baseline)")
 ax.set_xticks(x)
 ax.set_xticklabels(short_labels, fontsize=8)
 ax.legend()
@@ -89,7 +90,7 @@ for i, (med, lo, hi) in enumerate(zip(ctx_medians, ctx_min, ctx_max)):
                 fmt="o", label=ctx_labels[i], color=colors[i], capsize=3, markersize=6)
 
 ax.set_ylabel("Tokens/sec (window)")
-ax.set_title("Decode Performance at Different Context Lengths")
+ax.set_title("Decode Performance at Different Context Lengths (tweak bake-off)")
 ax.set_xticks(x)
 ax.set_xticklabels(short_labels, fontsize=8)
 ax.legend()
@@ -107,7 +108,7 @@ for i, (vals, name) in enumerate(zip(ctx_bars, ctx_names)):
     ax.bar([j + i * 0.2 for j in x], vals, 0.2, label=name, color=colors[i])
 
 ax.set_ylabel("Tokens/sec (window)")
-ax.set_title("Decode Performance — Bar Comparison")
+ax.set_title("Decode Performance — Bar Comparison (tweak bake-off)")
 ax.set_xticks(x)
 ax.set_xticklabels(short_labels, fontsize=8)
 ax.legend()
@@ -128,7 +129,7 @@ ax.plot(x, ttft_16k, "s-", label="16k prompt", color="#f28e2b", linewidth=2, mar
 ax.plot(x, ttft_32k, "^-", label="32k prompt", color="#e15759", linewidth=2, markersize=8)
 
 ax.set_ylabel("Time to First Token (seconds)")
-ax.set_title("Prefill Latency (TTFT)")
+ax.set_title("Prefill Latency (TTFT) — tweak bake-off")
 ax.set_xticks(x)
 ax.set_xticklabels(short_labels, fontsize=8)
 ax.legend()

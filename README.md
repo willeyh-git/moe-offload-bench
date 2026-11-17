@@ -97,7 +97,11 @@ it is its own winner by default.
 The 2026-11-17 Qwen3.6 chunk-6144 re-run (MTP 2, otherwise identical to the
 winner) lands at 1 998 / 81.6 at 128k — within ~2% of the chunk-5120 winner on
 both prefill and decode, so it does not take the win (128k total 2 079 vs
-2 092). See [Qwen3.6-35b-a3b-improvements.md](Qwen3.6-35b-a3b-improvements.md).
+2 092). The same tweaked baseline was also run at EXL3 5.0 bpw (2026-11-17
+17:37Z; tag says “batch 5120” but the run used chunk 6144): 1 955 / 75.0 at
+128k (total 2 029.6) — not a win either. See
+[Qwen3.6-35b-a3b-improvements.md](Qwen3.6-35b-a3b-improvements.md) and
+[QWEN3.6-35B-A3B.md](QWEN3.6-35B-A3B.md).
 
 † The Ornith tweaked run's 96k/128k decode medians rest on 2 runs each, and its
 tag doesn't confirm spec was off at runtime (see
@@ -127,7 +131,7 @@ per-model files.
 See [ORNITH1.5-35B-A3B.md](ORNITH1.5-35B-A3B.md) — canonical, superseded and
 stale runs annotated there.
 
-### `results/qwen/` — Qwen3.6-35B-A3B (28 files)
+### `results/qwen/` — Qwen3.6-35B-A3B (29 files)
 
 - `20261112T155239Z-qwen3-6-35b-a3b-ud-q4-k-xl.json` (UD Q4_K_XL, PolyStrata)
 - `20261112T151400Z-qwen3-6-35b-a3b-ud-q4-k-xl.json` (UD Q4_K_XL, Strata Unsloth build)
@@ -138,6 +142,9 @@ stale runs annotated there.
 - 11 × `20261115T…Z-…-exl3-4-00bpw.json` / `20261117T095948Z-…json` (tweak-bake-off runs
   0–9 from 2026-11-15 plus the 2026-11-17 chunk-6144 re-run — see
   [Qwen3.6-35b-a3b-improvements.md](Qwen3.6-35b-a3b-improvements.md) for tags)
+- `20261117T173715Z-qwen3-6-35b-a3b-exl3-5-00bpw.json` (tweak baseline at EXL3 5.0 bpw,
+  full range 4k→128k; tag says “batch 5120” but the run used chunk 6144 —
+  [QWEN3.6-35B-A3B.md](QWEN3.6-35B-A3B.md), 5.00 bpw section)
 
 See [QWEN3.6-35B-A3B.md](QWEN3.6-35B-A3B.md) for the full annotated list.
 

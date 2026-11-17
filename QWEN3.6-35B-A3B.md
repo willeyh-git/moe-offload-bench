@@ -277,6 +277,41 @@ vs the original 4.00 bpw aside runs (2 draft tokens):
 Raw: [results/20261115T125911Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/qwen/20261115T125911Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) (chunk 5120),
 [results/20261117T095948Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/qwen/20261117T095948Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) (chunk 6144)
 
+### EXL3 5.00 bpw, tweaked baseline — full range (2026-11-17 17:37Z)
+
+Same tweaked baseline as the chunk-6144 re-run above (chunk 6144,
+`cpu_stage_threads: 6`, `pinned_arena: false`, `vision_offload: true`), but
+EXL3 **5.00 bpw** instead of 4.00 bpw — MTP speculation (2 draft tokens, no
+external drafter). The run tag says "batch 5120", but the run actually used
+**chunk 6144**; the tag is corrected here. ~14.9 GB VRAM (tag).
+
+| Metric | Value | Δ vs 4.00 bpw chunk 5120 winner |
+| --- | --- | ---: |
+| Decode TPS (med, short) | 98.14 (95.97–100.70) | −10.3% |
+| Decode @4k (med) | 99.33 (89.15–102.48) | −9.7% |
+| Decode @16k (med) | 93.73 (87.62–101.89) | −9.8% |
+| Decode @32k (med) | 87.15 (84.75–91.53) | −14.0% |
+| Decode @64k (med) | 79.26 (76.06–84.30) | −15.0% |
+| Decode @96k (med, n=2) | 79.18 (78.93–79.18) | −11.6% |
+| Decode @128k (med, n=2) | 74.95 (74.00–74.95) | −9.4% |
+| Prefill 4k TPS | 2 054.9 (TTFT 2.02 s) | −11.2% |
+| Prefill 16k TPS | 2 452.8 (TTFT 6.64 s) | −4.4% |
+| Prefill 32k TPS | 2 450.9 (TTFT 13.34 s) | −6.0% |
+| Prefill 64k TPS | 2 328.0 (TTFT 28.08 s) | −3.5% |
+| Prefill 96k TPS | 2 127.3 (TTFT 46.36 s) | −2.3% |
+| Prefill 128k TPS | 1 954.6 (TTFT 66.20 s) | −2.7% |
+
+- **Decode −10 to −15%, prefill −11% at 4k narrowing to −2.7% at 128k.** The
+  128k total is 1 954.6 + 74.95 ≈ **2 029.6**, still below the 4.0 bpw winner
+  (2 009 + 82.8 = 2 092) — the 4.0 bpw MTP (2) chunk 5120 run keeps the Qwen3.6
+  win.
+- vs the original 5.00 bpw MTP aside (12:49Z, pre-tweak): decode is essentially
+  flat (98.1 vs 96.1 short, 75.0 vs 75.7 at 128k) while prefill roughly
+  doubles (2 055/2 453/2 451 vs 1 089/1 120/1 101 at 4k/16k/32k) — at 5.00 bpw
+  the tweaked baseline, not the quant, is doing the work.
+
+Raw: [results/qwen/20261117T173715Z-qwen3-6-35b-a3b-exl3-5-00bpw.json](results/qwen/20261117T173715Z-qwen3-6-35b-a3b-exl3-5-00bpw.json)
+
 ## GGUF runs — UD Q4_K_XL (llama.cpp, Strata, PolyStrata)
 
 Three more runs on the same day: the UD Q4_K_XL GGUF benchmarked with
@@ -335,7 +370,11 @@ One figure per quant (prefill on top, decode below — short-context decode
 plotted at the left edge). In the 4.00 and 5.00 bpw figures, the **dashed
 lines with square markers are the aside runs** with 2 draft tokens (red =
 MTP 11:20Z @4.00 and 12:49Z @5.00; orange = DFlash2 11:44Z @4.00 and
-12:19Z @5.00), full range to 128k.
+12:19Z @5.00), full range to 128k. The solid black/orange/red lines are the
+2026-11-15/17 tweaked-baseline runs: 4.00 bpw chunk 5120 (black) and chunk
+6144 (orange) per [Qwen3.6-35b-a3b-improvements.md](Qwen3.6-35b-a3b-improvements.md),
+and — in the 5.00 bpw figure only — the Q5 tweaked-baseline full run
+(solid red).
 
 **4.00 bpw**
 
@@ -419,6 +458,7 @@ Generated with [`plots/qwen_per_quant.py`](plots/qwen_per_quant.py)
 ## Raw results
 
 - `results/qwen/20261112T155239Z-qwen3-6-35b-a3b-ud-q4-k-xl.json` (GGUF UD Q4_K_XL, PolyStrata — full suite, 4k→128k)
+- `results/qwen/20261117T173715Z-qwen3-6-35b-a3b-exl3-5-00bpw.json` (5.00 bpw, MTP 2 draft tokens — tweaked baseline, chunk 6144, full range 4k→128k, 2026-11-17)
 - `results/qwen/20261112T151400Z-qwen3-6-35b-a3b-ud-q4-k-xl.json` (GGUF UD Q4_K_XL, original Strata engine, Unsloth build — 4k→128k)
 - `results/qwen/20261112T134157Z-qwen-3-6-q4-llama.json` (GGUF UD Q4_K_XL, llama.cpp no-drafter)
 - `results/qwen/20261112T132841Z-qwen-3-6-q4-llama.json` (GGUF UD Q4_K_XL, llama.cpp MTP 3 draft tokens)
