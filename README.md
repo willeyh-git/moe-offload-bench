@@ -87,6 +87,7 @@ bpw / UD Q4_K_XL GGUF); QFn Coder is IQ1_M, included for reference.
 | Ornith 1.5 35B-A3B | EXL3 4.0 bpw, no-spec / exllamav3 (tweaked)† | **1 925 tok/s** | **55.7 tok/s** |
 | Qwen3.6-35B-A3B | EXL3 4.0 bpw, MTP (2), chunk 5120 / exllamav3 (tweaked) | **2 009 tok/s** | **82.8 tok/s** |
 | Qwen3.8-Flash-Next Coder | IQ1_M / Polystrata nov-7 `--spec 2` | 1 572 tok/s | 44.0 tok/s |
+| KAT-Coder V2.5 Dev (MTP) | EXL3 5.0 bpw (hq), MTP (2), chunk 5120 / exllamav3 (tweaked)‡ | **1 203 tok/s** | **53.6 tok/s** |
 
 Excluded for not reaching 128k: llama.cpp Qwen3.6 runs and the exllamav3
 short-range Qwen3.6 runs (~32k max). QFn Coder has a single eligible run, so
@@ -102,6 +103,10 @@ tag doesn't confirm spec was off at runtime (see
 [ornith-1-5-tweaks.md](ornith-1-5-tweaks.md)). It replaces the previous DFlash2
 winner (1 168 / 57.3 at 128k) on the prefill+decode total (2 480 vs 1 725);
 short- and mid-context decode is roughly flat vs that run.
+
+‡ KAT-Coder's 96k/128k decode medians rest on 2 runs each, and
+`cpu_moe_split_experts: 190` is the OOM floor (anything lower does not start);
+see [KAT-Coder.md](KAT-Coder.md) for the run and the vs-baseline comparison.
 
 Generated with [`plots/best_q4_128k.py`](plots/best_q4_128k.py)
 (`uv run --with matplotlib python best_q4_128k.py`).
@@ -133,3 +138,8 @@ See [QWEN3.6-35B-A3B.md](QWEN3.6-35B-A3B.md) for the full annotated list.
 ### `results/qwen-flash-next/` — Qwen3.8-Flash-Next (1 file)
 
 - `polystrata-20261112T171930Z-qwen3-8-flash-next-coder-iq1-m.json` (Coder IQ1_M, Polystrata nov-7 build, `--spec 2` — [QWEN3.8-FLASH_NEXT.md](QWEN3.8-FLASH_NEXT.md))
+
+### `results/kat-coder/` — KAT-Coder V2.5 Dev (2 files)
+
+- `20261117T113004Z-kat-coder-v2-5-dev-mtp-exl3-5bpw-hq.json` (EXL3 5.0 bpw hq, MTP 2, chunk 5120 + cpu_stage_threads 6, `cpu_moe_split_experts` 190 — the tweaked full run, [KAT-Coder.md](KAT-Coder.md))
+- `20261113T150956Z-kat-coder-v2-5-dev-mtp-exl3-5bpw-hq.json` ("13 GB vram" baseline full run, same md)
