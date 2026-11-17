@@ -85,12 +85,17 @@ bpw / UD Q4_K_XL GGUF); QFn Coder is IQ1_M, included for reference.
 | Model | Winner (quant / engine) | Prefill @128k | Decode @128k |
 | --- | --- | ---: | ---: |
 | Ornith 1.5 35B-A3B | EXL3 4.0 bpw, no-spec / exllamav3 (tweaked)† | **1 925 tok/s** | **55.7 tok/s** |
-| Qwen3.6-35B-A3B | EXL3 4.0 bpw, no-spec / exllamav3 (tweaked) | **2 009 tok/s** | **82.8 tok/s** |
+| Qwen3.6-35B-A3B | EXL3 4.0 bpw, MTP (2), batch 5120 / exllamav3 (tweaked) | **2 009 tok/s** | **82.8 tok/s** |
 | Qwen3.8-Flash-Next Coder | IQ1_M / Polystrata nov-7 `--spec 2` | 1 572 tok/s | 44.0 tok/s |
 
 Excluded for not reaching 128k: llama.cpp Qwen3.6 runs and the exllamav3
 short-range Qwen3.6 runs (~32k max). QFn Coder has a single eligible run, so
 it is its own winner by default.
+
+The 2026-11-17 Qwen3.6 batch-6144 re-run (MTP 2, otherwise identical to the
+winner) lands at 1 998 / 81.6 at 128k — within ~2% of the batch-5120 winner on
+both prefill and decode, so it does not take the win (128k total 2 079 vs
+2 092). See [Qwen3.6-35b-a3b-improvements.md](Qwen3.6-35b-a3b-improvements.md).
 
 † The Ornith tweaked run's 96k/128k decode medians rest on 2 runs each, and its
 tag doesn't confirm spec was off at runtime (see
@@ -111,7 +116,7 @@ per-model files.
 See [ORNITH1.5-35B-A3B.md](ORNITH1.5-35B-A3B.md) — canonical, superseded and
 stale runs annotated there.
 
-### `results/qwen/` — Qwen3.6-35B-A3B (17 files)
+### `results/qwen/` — Qwen3.6-35B-A3B (18 files)
 
 - `20261112T155239Z-qwen3-6-35b-a3b-ud-q4-k-xl.json` (UD Q4_K_XL, PolyStrata)
 - `20261112T151400Z-qwen3-6-35b-a3b-ud-q4-k-xl.json` (UD Q4_K_XL, Strata Unsloth build)
@@ -119,6 +124,7 @@ stale runs annotated there.
 - `20261112T132841Z-qwen-3-6-q4-llama.json` (llama.cpp MTP)
 - 13 × `exllamav3-20261112T…-q{4,5,6}-exl3-*.json` (EXL3 4.00/5.00/6.00 bpw; no-spec /
   MTP / DFlash2 short-range runs plus 2-draft asides)
+- `20261117T095948Z-qwen3-6-35b-a3b-exl3-4-00bpw.json` (tweaked baseline, batch 6144, MTP 2, 4k→128k)
 
 See [QWEN3.6-35B-A3B.md](QWEN3.6-35B-A3B.md) for the full annotated list.
 

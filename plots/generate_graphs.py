@@ -11,10 +11,10 @@ import os
 RESULTS_DIR = "/home/willyhetland/Storage/code/llm-bench/results"
 OUTPUT_DIR = "/home/willyhetland/Storage/code/moe-offload-bench"
 
-# Load all Qwen3.6-35B-A3B results from 2026-11-15
+# Load all Qwen3.6-35B-A3B tweak runs (2026-11-15 bake-off + 2026-11-17 batch 6144)
 files = sorted([
     f for f in os.listdir(RESULTS_DIR)
-    if f.startswith("20261115") and "qwen3-6-35b" in f
+    if f.startswith(("20261115", "20261117")) and "qwen3-6-35b" in f
 ])  # ISO timestamp prefix -> chronological, oldest first
 
 runs = []
@@ -35,7 +35,8 @@ short_labels = [
     "wide -1",
     "gdn_sub 2048",
     "bc_gdn -1",
-    "FULL RUN",
+    "FULL RUN\n5120",
+    "FULL RUN\n6144",
 ]
 
 prefill_4k = [r["prefill"]["4000"]["tps"] for r in runs]

@@ -30,9 +30,15 @@ All runs share `EXL3_QC_STAGING=1` and `EXL3_GDN_REPLAY=1`. Runs 2–4 were laun
 | 6 | 2026-11-15 12:37 | pinned experts false, batch 5120, vision offload, cpu_stage_threads 6, threads 7, **wide -1** | 5120 | false | 14.7 GB | 107.31 | 113.13 | 103.87 | 102.98 |
 | 7 | 2026-11-15 12:45 | pinned experts false, batch 5120, vision offload, cpu_stage_threads 6, threads 7, **gdn_sub_chunk 2048** | 5120 | false | 14.7 GB | 105.73 | 107.40 | 102.42 | 96.85 |
 | 8 | 2026-11-15 12:52 | pinned experts false, batch 5120, vision offload, cpu_stage_threads 6, threads 7, **bc_gdn -1** | 5120 | false | 14.7 GB | 109.18 | 110.24 | 105.05 | 96.58 |
-| 9 | 2026-11-15 12:59 | pinned experts false, batch 5120, vision offload, cpu_stage_threads 6, threads 7, **FULL RUN** (4k→128k) | 5120 | false | 14.7 GB | 109.37 | 109.97 | 103.90 | 101.28 |
+| 9 | 2026-11-15 12:59 | pinned experts false, batch 5120, vision offload, cpu_stage_threads 6, threads 7, **FULL RUN** (4k→128k), MTP (2) | 5120 | false | 14.7 GB | 109.37 | 109.97 | 103.90 | 101.28 |
+| 10 | 2026-11-17 09:59 | pinned experts false, batch 6144, vision offload, cpu_stage_threads 6, threads 7, **FULL RUN** (4k→128k), MTP (2) | **6144** | false | 15 GB | 108.56 | 109.73 | 106.81 | 102.15 |
 
-> **Last run (Run 1) power & VRAM:** GPU at ~200–250 W, CPU at ~50 W, total VRAM ~15.3 GB.
+> **Run 10 (2026-11-17 09:59) power & VRAM:** GPU at ~260 W, VRAM max ~15.3 GB.
+>
+> Note on MTP: Runs 9 and 10 actually ran with **MTP speculation (2 draft
+> tokens)** — the run tags don’t mention a drafter because only the external
+> draft model was absent. The earlier "no-spec / no drafter" label on the
+> winner charts has been corrected to "MTP (2)".
 
 ### Prefill Performance (tokens/sec)
 
@@ -48,6 +54,7 @@ All runs share `EXL3_QC_STAGING=1` and `EXL3_GDN_REPLAY=1`. Runs 2–4 were laun
 | 7 | 2268 | 1.83 | 2448 | 6.66 | 2485 | 13.16 |
 | 8 | 2335 | 1.77 | 2547 | 6.40 | 2587 | 12.64 |
 | 9 | 2314 | 1.79 | 2566 | 6.35 | 2606 | 12.55 |
+| 10 | 2291 | 1.81 | 2589 | 6.29 | 2539 | 12.88 |
 
 ### Decode Performance (tokens/sec)
 
@@ -65,6 +72,7 @@ All runs share `EXL3_QC_STAGING=1` and `EXL3_GDN_REPLAY=1`. Runs 2–4 were laun
 | 7 | 95.13 | 105.73 | 109.25 |
 | 8 | 102.07 | 109.18 | 115.38 |
 | 9 | 105.09 | 109.37 | 115.80 |
+| 10 | 102.87 | 108.56 | 110.01 |
 
 #### Decode at Context Length
 
@@ -80,6 +88,7 @@ All runs share `EXL3_QC_STAGING=1` and `EXL3_GDN_REPLAY=1`. Runs 2–4 were laun
 | 7 | 4k | 105.45 | 107.40 | 110.48 |
 | 8 | 4k | 107.23 | 110.24 | 113.09 |
 | 9 | 4k | 108.92 | 109.97 | 116.59 |
+| 10 | 4k | 108.26 | 109.73 | 112.85 |
 | 1 | 16k | 104.27 | **106.98** | 109.52 |
 | 2 | 16k | 106.34 | 108.25 | 111.90 |
 | 3 | 16k | 100.51 | 103.24 | 105.98 |
@@ -89,6 +98,7 @@ All runs share `EXL3_QC_STAGING=1` and `EXL3_GDN_REPLAY=1`. Runs 2–4 were laun
 | 7 | 16k | 95.82 | 102.42 | 103.39 |
 | 8 | 16k | 101.23 | 105.05 | 105.94 |
 | 9 | 16k | 95.99 | 103.90 | 107.20 |
+| 10 | 16k | 106.18 | 106.81 | 108.82 |
 | 0 | 16k | 92.88 | 98.12 | 103.04 |
 | 1 | 32k | 100.64 | **104.13** | 105.69 |
 | 2 | 32k | 99.26 | 101.54 | 103.79 |
@@ -99,6 +109,7 @@ All runs share `EXL3_QC_STAGING=1` and `EXL3_GDN_REPLAY=1`. Runs 2–4 were laun
 | 7 | 32k | 94.21 | 96.85 | 99.14 |
 | 8 | 32k | 94.73 | 96.58 | 102.67 |
 | 9 | 32k | 95.38 | 101.28 | 105.36 |
+| 10 | 32k | 99.23 | 102.15 | 105.32 |
 | 0 | 32k | 91.84 | 94.01 | 98.80 |
 
 ---
@@ -109,13 +120,8 @@ Full benchmark JSONs are stored in the `results/` directory:
 
 | # | File | Tag |
 |---|------|-----|
-| 1 | [results/20261115T114428Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/20261115T114428Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch 4096 |
-| 2 | [results/20261115T115017Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/20261115T115017Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts true, batch 4096, vision offload |
-| 3 | [results/20261115T115658Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/20261115T115658Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch 4096, vision offload, cpu_stage_threads 6, threads 7 |
-| 4 | [results/20261115T120402Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/20261115T120402Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch 5120, vision offload, cpu_stage_threads 6, threads 7 |
-| 5 | [results/20261115T122705Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/20261115T122705Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch 5120, vision offload, cpu_stage_threads 6, threads 7, swizzle -1 |
-| 6 | [results/20261115T123728Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/20261115T123728Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch 5120, vision offload, cpu_stage_threads 6, threads 7, wide -1 |
-| 7 | [results/20261115T124540Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/20261115T124540Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch 5120, vision offload, cpu_stage_threads 6, threads 7, gdn_sub_chunk 2048 |
+| # | File | Tag |
+|---|------|-----|
 | 0 | [results/20261115T112713Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/20261115T112713Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch increase (no cpu_stage_threads) |
 | 1 | [results/20261115T114428Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/20261115T114428Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch 4096 |
 | 2 | [results/20261115T115017Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/20261115T115017Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts true, batch 4096, vision offload |
@@ -125,7 +131,8 @@ Full benchmark JSONs are stored in the `results/` directory:
 | 6 | [results/20261115T123728Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/20261115T123728Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch 5120, vision offload, cpu_stage_threads 6, threads 7, wide -1 |
 | 7 | [results/20261115T124540Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/20261115T124540Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch 5120, vision offload, cpu_stage_threads 6, threads 7, gdn_sub_chunk 2048 |
 | 8 | [results/20261115T125239Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/20261115T125239Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch 5120, vision offload, cpu_stage_threads 6, threads 7, bc_gdn -1 |
-| 9 | [results/20261115T125911Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/20261115T125911Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch 5120, vision offload, cpu_stage_threads 6, threads 7, FULL RUN (4k→128k) |
+| 9 | [results/20261115T125911Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/20261115T125911Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch 5120, vision offload, cpu_stage_threads 6, threads 7, FULL RUN (4k→128k), MTP (2) |
+| 10 | [results/20261117T095948Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/20261117T095948Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) | pinned experts false, batch 6144, vision offload, cpu_stage_threads 6, threads 7, FULL RUN (4k→128k), MTP (2) |
 
 ---
 

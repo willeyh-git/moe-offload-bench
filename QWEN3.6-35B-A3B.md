@@ -217,8 +217,9 @@ run.)
 ## Improved baseline — full range 4k→128k (2026-11-15)
 
 A follow-up full-range run with the improved baseline config (batch 5120,
-cpu_stage_threads 6, pinned_arena false, vision_offload true) — no speculation,
-no GDN/swizzle flags. See [Qwen3.6-35b-a3b-improvements.md](Qwen3.6-35b-a3b-improvements.md)
+cpu_stage_threads 6, pinned_arena false, vision_offload true) — MTP speculation
+(2 draft tokens, no external drafter), no GDN/swizzle flags. See
+[Qwen3.6-35b-a3b-improvements.md](Qwen3.6-35b-a3b-improvements.md)
 for the full comparison of tweak flags.
 
 | Metric | Value |
@@ -237,18 +238,44 @@ for the full comparison of tweak flags.
 | Prefill 96k TPS | 2178 (TTFT 45.24 s) |
 | Prefill 128k TPS | 2009 (TTFT 64.20 s) |
 
+### Batch 6144 re-run (2026-11-17 09:59Z)
+
+Same tweaked baseline with the batch size raised 5120 → 6144 (same MTP 2
+drafter). GPU peaked at **15.3 GB VRAM**, ~260 W.
+
+| Metric | Value | Δ vs batch 5120 |
+| --- | --- | --- |
+| Decode TPS (med, short) | 108.56 (102.87–110.01) | −0.7% |
+| Decode @4k (med) | 109.73 (108.26–112.85) | −0.2% |
+| Decode @16k (med) | 106.81 (106.18–108.82) | +2.8% |
+| Decode @32k (med) | 102.15 (99.23–105.32) | +0.9% |
+| Decode @64k (med) | 93.97 (89.38–97.49) | +0.8% |
+| Decode @96k (med, n=2) | 88.07 (88.04–88.10) | −1.7% |
+| Decode @128k (med, n=2) | 81.63 (81.33–81.93) | −1.4% |
+| Prefill 4k TPS | 2 291 (TTFT 1.81 s) | −0.9% |
+| Prefill 16k TPS | 2 589 (TTFT 6.29 s) | +0.9% |
+| Prefill 32k TPS | 2 539 (TTFT 12.88 s) | −2.1% |
+| Prefill 64k TPS | 2 375 (TTFT 27.53 s) | −1.5% |
+| Prefill 96k TPS | 2 174 (TTFT 45.32 s) | −0.2% |
+| Prefill 128k TPS | 1 998 (TTFT 64.57 s) | −0.6% |
+
+Within ~1–2% of the batch-5120 winner at every context — the larger batch buys
+nothing, so the batch-5120 config stays the reference (128k total 2 092 vs
+2 079).
+
 vs the original 4.00 bpw aside runs (2 draft tokens):
 
 - **Prefill: dramatically faster** — 2 314/2 566/2 606 vs 1 463/1 534/1 492 at
   4k/16k/32k (DFlash2); the improved staging/threads config nearly doubles
   prefill throughput.
 - **Decode: comparable to MTP aside** — 109.4 short vs 112.8 (MTP 2-draft),
-  101.3 at 32k vs 100.7; the no-spec run holds decode flat across context
-  lengths where MTP/DFlash2 fall off more steeply.
+  101.3 at 32k vs 100.7; the tweaked MTP (2) run holds decode flat across
+  context lengths where MTP/DFlash2 fall off more steeply.
 - **At 128k: prefill 2 009 tok/s, decode 82.8 tok/s** — beats the DFlash2
   aside at 128k (1 246 / 71.6) and matches the MTP aside (1 211 / 83.3).
 
-Raw: [results/20261115T125911Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/20261115T125911Z-qwen3-6-35b-a3b-exl3-4-00bpw.json)
+Raw: [results/20261115T125911Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/20261115T125911Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) (batch 5120),
+[results/20261117T095948Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/20261117T095948Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) (batch 6144)
 
 ## GGUF runs — UD Q4_K_XL (llama.cpp, Strata, PolyStrata)
 
