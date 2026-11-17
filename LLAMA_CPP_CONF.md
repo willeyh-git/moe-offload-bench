@@ -1,8 +1,7 @@
 # Llama.cpp config for runs
 
 ## Always
-```
-```
+```Shell
 exec "$LLAMA_SERVER" \
   --model "$MODEL" \
   --alias "ornith-llama" \
@@ -20,11 +19,15 @@ exec "$LLAMA_SERVER" \
   --top-p 0.95 \
   --top-k 20 \
   --min-p 0.0
+```
 
 ## No MTP
+```Shell
 --n-cpu-moe 25
+```
 
 ## MTP
+```Shell
 --n-cpu-moe 30 \
 --spec-type draft-mtp,ngram-mod \
 --spec-ngram-mod-n-match 40 \
@@ -33,3 +36,4 @@ exec "$LLAMA_SERVER" \
 --spec-draft-n-max 3 \
 --spec-draft-type-k q4_0 \
 --spec-draft-type-v q4_0 \
+```
