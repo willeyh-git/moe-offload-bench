@@ -97,9 +97,11 @@ it is its own winner by default.
 The 2026-11-17 Qwen3.6 chunk-6144 re-run (MTP 2, otherwise identical to the
 winner) lands at 1 998 / 81.6 at 128k — within ~2% of the chunk-5120 winner on
 both prefill and decode, so it does not take the win (128k total 2 079 vs
-2 092). The same tweaked baseline was also run at EXL3 5.0 bpw (2026-11-17
-17:37Z; tag says “batch 5120” but the run used chunk 6144): 1 955 / 75.0 at
-128k (total 2 029.6) — not a win either. See
+2 092). The same tweaked baseline was also run at EXL3 5.0 bpw twice (2026-11-17:
+17:37Z, tag says “batch 5120” but the run used chunk 6144, and 18:06Z at a
+genuine chunk 5120): 1 955 / 75.0 (total 2 029.6) and 1 861 / 75.5 (total
+1 936.5) at 128k — not wins either (chunk 5120 decodes better at 32k–96k,
+chunk 6144 prefills better). See
 [Qwen3.6-35b-a3b-improvements.md](Qwen3.6-35b-a3b-improvements.md) and
 [QWEN3.6-35B-A3B.md](QWEN3.6-35B-A3B.md).
 
@@ -131,7 +133,7 @@ per-model files.
 See [ORNITH1.5-35B-A3B.md](ORNITH1.5-35B-A3B.md) — canonical, superseded and
 stale runs annotated there.
 
-### `results/qwen/` — Qwen3.6-35B-A3B (29 files)
+### `results/qwen/` — Qwen3.6-35B-A3B (30 files)
 
 - `20261112T155239Z-qwen3-6-35b-a3b-ud-q4-k-xl.json` (UD Q4_K_XL, PolyStrata)
 - `20261112T151400Z-qwen3-6-35b-a3b-ud-q4-k-xl.json` (UD Q4_K_XL, Strata Unsloth build)
@@ -145,6 +147,8 @@ stale runs annotated there.
 - `20261117T173715Z-qwen3-6-35b-a3b-exl3-5-00bpw.json` (tweak baseline at EXL3 5.0 bpw,
   full range 4k→128k; tag says “batch 5120” but the run used chunk 6144 —
   [QWEN3.6-35B-A3B.md](QWEN3.6-35B-A3B.md), 5.00 bpw section)
+- `20261117T180639Z-qwen3-6-35b-a3b-exl3-5-00bpw.json` (tweak baseline at EXL3 5.0 bpw,
+  genuine chunk 5120, full range 4k→128k — same md)
 
 See [QWEN3.6-35B-A3B.md](QWEN3.6-35B-A3B.md) for the full annotated list.
 

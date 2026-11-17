@@ -59,6 +59,16 @@ RUNS = [
         "decode": [98.1, 99.3, 93.7, 87.2, 79.3, 79.2, 75.0],
     },
     {
+        # Second 11-17 Q5 run — a genuine chunk 5120 (this run's tag matches
+        # its behavior, 18:06Z). Decode is clearly better than chunk 6144
+        # from 32k to 96k (+4 to +7%), prefill ~4-7% lower. 128k total
+        # 1 861 + 74.8 = 1 936 — not a win.
+        "label": "Qwen3.6-35B-A3B — EXL3 5.0 bpw, MTP (2), chunk 5120 — exllamav3 (tweaked, 18:06Z)",
+        "color": "#bcbd22",
+        "prefill": [1986.2, 2273.7, 2337.4, 2205.4, 2001.7, 1861.0],
+        "decode": [98.5, 98.2, 90.9, 90.8, 84.5, 81.8, 74.8],
+    },
+    {
         # QFN Coder (only run): Polystrata nov-7, --spec 2
         "label": "Qwen3.8-Flash-Next Coder — IQ1_M — Polystrata nov-7, --spec 2",
         "color": "#2ca02c",

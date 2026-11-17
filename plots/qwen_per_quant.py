@@ -45,6 +45,7 @@ quants = {
             "MTP":      [1051.9, 1090.9],
             "MTP (2 drafts)": [1089.1, 1120.0, 1101.0, 1047.9, 998.5, 958.2],
             "MTP (2), chunk 6144 Q5 (tweaked)": [2054.9, 2452.8, 2450.9, 2328.0, 2127.3, 1954.6],
+            "MTP (2), chunk 5120 Q5 (tweaked)": [1986.2, 2273.7, 2337.4, 2205.4, 2001.7, 1861.0],
             "DFlash2":  [1060.9, 1093.5],
             "DFlash2 (2 drafts)": [1128.0, 1155.0, 1129.9, 1074.1, 1011.3, 978.2],
         },
@@ -53,6 +54,7 @@ quants = {
             "MTP":      [96.4, 96.5, 89.1],
             "MTP (2 drafts)": [96.1, 97.2, 94.9, 85.6, 81.6, 80.0, 75.7],
             "MTP (2), chunk 6144 Q5 (tweaked)": [98.1, 99.3, 93.7, 87.2, 79.3, 79.2, 75.0],
+            "MTP (2), chunk 5120 Q5 (tweaked)": [98.5, 98.2, 90.9, 90.8, 84.5, 81.8, 74.8],
             "DFlash2":  [79.1, 87.3, 77.8],
             "DFlash2 (2 drafts)": [98.7, 99.2, 94.0, 86.6, 80.5, 76.1, 67.2],
         },
@@ -98,13 +100,13 @@ quants = {
 }
 
 # draw order, color, line style
-order = ["none", "MTP (2), chunk 5120 (tweaked)", "MTP (2), chunk 6144 (tweaked)", "MTP (2), chunk 6144 Q5 (tweaked)", "MTP", "DFlash2", "PolyStrata", "MTP (2 drafts)", "DFlash2 (2 drafts)"]
+order = ["none", "MTP (2), chunk 5120 (tweaked)", "MTP (2), chunk 6144 (tweaked)", "MTP (2), chunk 6144 Q5 (tweaked)", "MTP (2), chunk 5120 Q5 (tweaked)", "MTP", "DFlash2", "PolyStrata", "MTP (2 drafts)", "DFlash2 (2 drafts)"]
 colors = {"none": "#2ca02c", "MTP (2), chunk 5120 (tweaked)": "#000000",
-          "MTP (2), chunk 6144 (tweaked)": "#ff7f0e", "MTP (2), chunk 6144 Q5 (tweaked)": "#d62728", "MTP": "#e00080", "DFlash2": "#1f77b4",
+          "MTP (2), chunk 6144 (tweaked)": "#ff7f0e", "MTP (2), chunk 6144 Q5 (tweaked)": "#d62728", "MTP (2), chunk 5120 Q5 (tweaked)": "#bcbd22", "MTP": "#e00080", "DFlash2": "#1f77b4",
           "PolyStrata": "#9467bd",
           "MTP (2 drafts)": "#c0392b", "DFlash2 (2 drafts)": "#ff7f0e"}
 styles = {"none": "-", "MTP (2), chunk 5120 (tweaked)": "-", "MTP (2), chunk 6144 (tweaked)": "-",
-          "MTP (2), chunk 6144 Q5 (tweaked)": "-", "MTP": "-", "DFlash2": "-", "PolyStrata": "-",
+          "MTP (2), chunk 6144 Q5 (tweaked)": "-", "MTP (2), chunk 5120 Q5 (tweaked)": "-", "MTP": "-", "DFlash2": "-", "PolyStrata": "-",
           "MTP (2 drafts)": "--", "DFlash2 (2 drafts)": "--"}
 
 

@@ -38,6 +38,7 @@ short_labels = [
     "FULL RUN\n5120",
     "FULL RUN\n6144",
     "Q5 FULL RUN\nchunk 6144",
+    "Q5 FULL RUN\nchunk 5120",
 ]
 
 prefill_4k = [r["prefill"]["4000"]["tps"] for r in runs]

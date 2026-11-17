@@ -277,7 +277,7 @@ vs the original 4.00 bpw aside runs (2 draft tokens):
 Raw: [results/20261115T125911Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/qwen/20261115T125911Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) (chunk 5120),
 [results/20261117T095948Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/qwen/20261117T095948Z-qwen3-6-35b-a3b-exl3-4-00bpw.json) (chunk 6144)
 
-### EXL3 5.00 bpw, tweaked baseline — full range (2026-11-17 17:37Z)
+### EXL3 5.00 bpw, tweaked baseline — full range (2026-11-17 17:37Z, chunk 6144)
 
 Same tweaked baseline as the chunk-6144 re-run above (chunk 6144,
 `cpu_stage_threads: 6`, `pinned_arena: false`, `vision_offload: true`), but
@@ -311,6 +311,55 @@ external drafter). The run tag says "batch 5120", but the run actually used
   the tweaked baseline, not the quant, is doing the work.
 
 Raw: [results/qwen/20261117T173715Z-qwen3-6-35b-a3b-exl3-5-00bpw.json](results/qwen/20261117T173715Z-qwen3-6-35b-a3b-exl3-5-00bpw.json)
+
+### EXL3 5.00 bpw, tweaked baseline — chunk 5120 re-run (2026-11-17 18:06Z)
+
+Same tweaked baseline, this time genuinely at chunk 5120 (the tag's "batch
+increase 5120" now matches the config). MTP speculation (2 draft tokens, no
+external drafter). ~14.9 GB VRAM (tag).
+
+| Metric | Value | Δ vs 4.00 bpw chunk 5120 winner |
+| --- | --- | ---: |
+| Decode TPS (med, short) | 98.51 (96.32–104.84) | −9.9% |
+| Decode @4k (med) | 98.15 (90.93–102.41) | −10.7% |
+| Decode @16k (med) | 90.93 (90.36–91.28) | −12.5% |
+| Decode @32k (med) | 90.80 (85.75–92.52) | −10.4% |
+| Decode @64k (med) | 84.54 (78.06–86.65) | −9.3% |
+| Decode @96k (med, n=2) | 82.28 (81.39–82.28) | −8.1% |
+| Decode @128k (med, n=2) | 75.53 (74.15–75.53) | −8.7% |
+| Prefill 4k TPS | 1 986.2 (TTFT 2.08 s) | −14.2% |
+| Prefill 16k TPS | 2 273.7 (TTFT 7.17 s) | −11.4% |
+| Prefill 32k TPS | 2 337.4 (TTFT 13.99 s) | −10.3% |
+| Prefill 64k TPS | 2 205.4 (TTFT 29.64 s) | −8.5% |
+| Prefill 96k TPS | 2 001.7 (TTFT 49.22 s) | −8.1% |
+| Prefill 128k TPS | 1 861.0 (TTFT 69.31 s) | −7.4% |
+
+- vs the 4.00 bpw winner: prefill −7 to −14%, decode ~−10% across the range;
+  128k total 1 861 + 75.5 ≈ **1 936.5**, below 2 092 — the 4.0 bpw
+  MTP (2) chunk 5120 run stays the Qwen3.6 win.
+- **Chunk size at 5.00 bpw, quant-specific**: at 4.00 bpw, raising 5120 → 6144
+  moved decode by ~1–2%, but at 5.00 bpw the two runs genuinely diverge:
+
+| Metric | chunk 5120 | chunk 6144 | chunk-5120 Δ |
+| --- | ---: | ---: | ---: |
+| Decode short | 98.51 | 98.14 | +0.4% |
+| Decode @16k | 90.93 | 93.73 | −3.0% |
+| Decode @32k | 90.80 | 87.15 | +4.2% |
+| Decode @64k | 84.54 | 79.26 | +6.7% |
+| Decode @96k (n=2) | 82.28 | 79.18 | +3.9% |
+| Decode @128k (n=2) | 75.53 | 74.95 | +0.8% |
+| Prefill 4k | 1 986.2 | 2 054.9 | −3.3% |
+| Prefill 16k | 2 273.7 | 2 452.8 | −7.3% |
+| Prefill 32k | 2 337.4 | 2 450.9 | −4.6% |
+| Prefill 64k | 2 205.4 | 2 328.0 | −5.3% |
+| Prefill 96k (n=2) | 2 001.7 | 2 127.3 | −5.9% |
+| Prefill 128k (n=2) | 1 861.0 | 1 954.6 | −4.8% |
+
+  Bigger chunks buy 3–7% more prefill; smaller chunks keep the 32k–96k decode
+  4–7% faster. Neither beats the 4.0 bpw winner (totals 1 936.5 / 2 029.6 vs
+  2 092).
+
+Raw: [results/qwen/20261117T180639Z-qwen3-6-35b-a3b-exl3-5-00bpw.json](results/qwen/20261117T180639Z-qwen3-6-35b-a3b-exl3-5-00bpw.json)
 
 ## GGUF runs — UD Q4_K_XL (llama.cpp, Strata, PolyStrata)
 
@@ -373,8 +422,8 @@ MTP 11:20Z @4.00 and 12:49Z @5.00; orange = DFlash2 11:44Z @4.00 and
 12:19Z @5.00), full range to 128k. The solid black/orange/red lines are the
 2026-11-15/17 tweaked-baseline runs: 4.00 bpw chunk 5120 (black) and chunk
 6144 (orange) per [Qwen3.6-35b-a3b-improvements.md](Qwen3.6-35b-a3b-improvements.md),
-and — in the 5.00 bpw figure only — the Q5 tweaked-baseline full run
-(solid red).
+and — in the 5.00 bpw figure only — the Q5 tweaked-baseline full runs (solid
+red chunk 6144, solid olive chunk 5120).
 
 **4.00 bpw**
 
@@ -459,6 +508,7 @@ Generated with [`plots/qwen_per_quant.py`](plots/qwen_per_quant.py)
 
 - `results/qwen/20261112T155239Z-qwen3-6-35b-a3b-ud-q4-k-xl.json` (GGUF UD Q4_K_XL, PolyStrata — full suite, 4k→128k)
 - `results/qwen/20261117T173715Z-qwen3-6-35b-a3b-exl3-5-00bpw.json` (5.00 bpw, MTP 2 draft tokens — tweaked baseline, chunk 6144, full range 4k→128k, 2026-11-17)
+- `results/qwen/20261117T180639Z-qwen3-6-35b-a3b-exl3-5-00bpw.json` (5.00 bpw, MTP 2 draft tokens — tweaked baseline, chunk 5120, full range 4k→128k, 2026-11-17)
 - `results/qwen/20261112T151400Z-qwen3-6-35b-a3b-ud-q4-k-xl.json` (GGUF UD Q4_K_XL, original Strata engine, Unsloth build — 4k→128k)
 - `results/qwen/20261112T134157Z-qwen-3-6-q4-llama.json` (GGUF UD Q4_K_XL, llama.cpp no-drafter)
 - `results/qwen/20261112T132841Z-qwen-3-6-q4-llama.json` (GGUF UD Q4_K_XL, llama.cpp MTP 3 draft tokens)
