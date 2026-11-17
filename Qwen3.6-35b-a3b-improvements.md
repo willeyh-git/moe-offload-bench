@@ -34,6 +34,8 @@ All runs share `EXL3_QC_STAGING=1` and `EXL3_GDN_REPLAY=1`. Runs 2–4 were laun
 | 10 | 2026-11-17 09:59 | pinned experts false, chunk 6144, vision offload, cpu_stage_threads 6, threads 7, **FULL RUN** (4k→128k), MTP (2) | **6144** | false | 15 GB | 108.56 | 109.73 | 106.81 | 102.15 |
 | 11 | 2026-11-17 17:37 | pinned experts false, chunk 6144, vision offload, cpu_stage_threads 6, threads 7, **FULL RUN** (4k→128k), MTP (2), **Q5 (5.00 bpw)** | **6144** | false | 14.9 GB | 98.14 | 99.33 | 93.73 | 87.15 |
 | 12 | 2026-11-17 18:06 | pinned experts false, chunk 5120, vision offload, cpu_stage_threads 6, threads 7, **FULL RUN** (4k→128k), MTP (2), **Q5 (5.00 bpw)** | **5120** | false | 14.9 GB | 98.51 | 98.15 | 90.93 | 90.80 |
+| 13 | 2026-11-17 18:47 | pinned experts false, chunk 5120, vision offload, cpu_stage_threads 6, threads 7, **FULL RUN** (4k→128k), MTP (2), **155 experts offload**, **Q6 (6.00 bpw)** | **5120** | false | 14.7 GB | 99.32 | 90.43 | 86.99 | 86.72 |
+| 14 | 2026-11-17 19:01 | pinned experts false, chunk 6144, vision offload, cpu_stage_threads 6, threads 7, **FULL RUN** (4k→128k), MTP (2), **155 experts offload**, **Q6 (6.00 bpw)** | **6144** | false | 14.3 GB | 85.62 | 86.96 | 80.02 | 75.84 |
 
 > **Run 10 (2026-11-17 09:59) power & VRAM:** GPU at ~260 W, VRAM max ~15.3 GB.
 >
@@ -59,6 +61,8 @@ All runs share `EXL3_QC_STAGING=1` and `EXL3_GDN_REPLAY=1`. Runs 2–4 were laun
 | 10 | 2291 | 1.81 | 2589 | 6.29 | 2539 | 12.88 |
 | 11 | 2055 | 2.02 | 2453 | 6.64 | 2451 | 13.34 |
 | 12 | 1986 | 2.08 | 2274 | 7.17 | 2337 | 13.99 |
+| 13 | 1857 | 2.23 | 2000 | 8.15 | 2109 | 15.51 |
+| 14 | 1841 | 2.25 | 2200 | 7.41 | 2217 | 14.75 |
 
 ### Decode Performance (tokens/sec)
 
@@ -79,6 +83,8 @@ All runs share `EXL3_QC_STAGING=1` and `EXL3_GDN_REPLAY=1`. Runs 2–4 were laun
 | 10 | 102.87 | 108.56 | 110.01 |
 | 11 | 95.97 | 98.14 | 100.70 |
 | 12 | 96.32 | 98.51 | 104.84 |
+| 13 | 94.23 | 99.32 | 103.00 |
+| 14 | 82.66 | 85.62 | 90.33 |
 
 #### Decode at Context Length
 
@@ -97,6 +103,8 @@ All runs share `EXL3_QC_STAGING=1` and `EXL3_GDN_REPLAY=1`. Runs 2–4 were laun
 | 10 | 4k | 108.26 | 109.73 | 112.85 |
 | 11 | 4k | 89.15 | 99.33 | 102.48 |
 | 12 | 4k | 90.93 | 98.15 | 102.41 |
+| 13 | 4k | 87.47 | 90.43 | 97.62 |
+| 14 | 4k | 83.71 | 86.96 | 89.05 |
 | 1 | 16k | 104.27 | **106.98** | 109.52 |
 | 2 | 16k | 106.34 | 108.25 | 111.90 |
 | 3 | 16k | 100.51 | 103.24 | 105.98 |
@@ -110,6 +118,8 @@ All runs share `EXL3_QC_STAGING=1` and `EXL3_GDN_REPLAY=1`. Runs 2–4 were laun
 | 0 | 16k | 92.88 | 98.12 | 103.04 |
 | 11 | 16k | 87.62 | 93.73 | 101.89 |
 | 12 | 16k | 90.36 | 90.93 | 91.28 |
+| 13 | 16k | 85.48 | 86.99 | 90.89 |
+| 14 | 16k | 77.52 | 80.02 | 85.18 |
 | 1 | 32k | 100.64 | **104.13** | 105.69 |
 | 2 | 32k | 99.26 | 101.54 | 103.79 |
 | 3 | 32k | 94.58 | 96.18 | 98.79 |
@@ -123,6 +133,8 @@ All runs share `EXL3_QC_STAGING=1` and `EXL3_GDN_REPLAY=1`. Runs 2–4 were laun
 | 0 | 32k | 91.84 | 94.01 | 98.80 |
 | 11 | 32k | 84.75 | 87.15 | 91.53 |
 | 12 | 32k | 85.75 | 90.80 | 92.52 |
+| 13 | 32k | 84.57 | 86.72 | 91.33 |
+| 14 | 32k | 73.18 | 75.84 | 82.13 |
 
 ---
 
@@ -145,6 +157,8 @@ Full benchmark JSONs are stored in the `results/` directory:
 | 10 | [results/20261117T095948Z-qwen3-6-35b-a3b-exl3-4-00bpw.json](results/qwen/FULL RUN (4k→128k), MTP (2) |
 | 11 | [results/qwen/20261117T173715Z-qwen3-6-35b-a3b-exl3-5-00bpw.json](results/qwen/20261117T173715Z-qwen3-6-35b-a3b-exl3-5-00bpw.json) | pinned experts false, chunk 6144, vision offload, cpu_stage_threads 6, threads 7, FULL RUN (4k→128k), MTP (2), Q5 (5.00 bpw) |
 | 12 | [results/qwen/20261117T180639Z-qwen3-6-35b-a3b-exl3-5-00bpw.json](results/qwen/20261117T180639Z-qwen3-6-35b-a3b-exl3-5-00bpw.json) | pinned experts false, chunk 5120, vision offload, cpu_stage_threads 6, threads 7, FULL RUN (4k→128k), MTP (2), Q5 (5.00 bpw) |
+| 13 | [results/qwen/20261117T184703Z-q6-exl3-6-00bpw-hb6.json](results/qwen/20261117T184703Z-q6-exl3-6-00bpw-hb6.json) | pinned experts false, chunk 5120, vision offload, cpu_stage_threads 6, threads 7, FULL RUN (4k→128k), MTP (2), 155 experts offload, Q6 (6.00 bpw) |
+| 14 | [results/qwen/20261117T190153Z-q6-exl3-6-00bpw-hb6.json](results/qwen/20261117T190153Z-q6-exl3-6-00bpw-hb6.json) | pinned experts false, chunk 6144, vision offload, cpu_stage_threads 6, threads 7, FULL RUN (4k→128k), MTP (2), 155 experts offload, Q6 (6.00 bpw) |
 
 ---
 

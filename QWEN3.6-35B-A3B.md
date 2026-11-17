@@ -361,6 +361,66 @@ external drafter). ~14.9 GB VRAM (tag).
 
 Raw: [results/qwen/20261117T180639Z-qwen3-6-35b-a3b-exl3-5-00bpw.json](results/qwen/20261117T180639Z-qwen3-6-35b-a3b-exl3-5-00bpw.json)
 
+### EXL3 6.00 bpw, tweaked baseline — full range (2026-11-17, chunk 5120 & 6144)
+
+First full-range data for 6.00 bpw (the 11-12 bake-off ran ~32k max). Same
+tweaked baseline — `cpu_stage_threads: 6`, `pinned_arena: false`,
+`vision_offload: true` — with **155 experts offloaded** (~14.7 GB VRAM the
+chunk-5120 run 18:47Z, ~14.3 GB the chunk-6144 run 19:01Z) and MTP
+speculation (2 draft tokens, no external drafter). This time both tags' "
+batch" labels match the config.
+
+**Chunk 5120 (2026-11-17 18:47Z)**
+
+| Metric | Value | Δ vs 4.00 bpw chunk 5120 winner |
+| --- | --- | ---: |
+| Decode TPS (med, short) | 99.32 (94.23–103.00) | −9.2% |
+| Decode @4k (med) | 90.43 (87.47–97.62) | −17.8% |
+| Decode @16k (med) | 86.99 (85.48–90.89) | −16.3% |
+| Decode @32k (med) | 86.72 (84.57–91.33) | −14.4% |
+| Decode @64k (med) | 78.64 (72.95–82.81) | −15.6% |
+| Decode @96k (med, n=2) | 77.98 (76.93–77.98) | −12.9% |
+| Decode @128k (med, n=2) | 70.66 (69.17–70.66) | −14.6% |
+| Prefill 4k TPS | 1 856.7 (TTFT 2.23 s) | −19.8% |
+| Prefill 16k TPS | 2 000.2 (TTFT 8.15 s) | −22.1% |
+| Prefill 32k TPS | 2 108.5 (TTFT 15.51 s) | −19.1% |
+| Prefill 64k TPS | 2 026.8 (TTFT 32.26 s) | −16.0% |
+| Prefill 96k TPS | 1 844.7 (TTFT 53.41 s, n=2) | −15.3% |
+| Prefill 128k TPS | 1 722.3 (TTFT 74.89 s, n=2) | −14.3% |
+
+**Chunk 6144 (2026-11-17 19:01Z)**
+
+| Metric | Value | Δ vs 4.00 bpw chunk 5120 winner | Δ vs 6.00 bpw chunk 5120 |
+| --- | --- | ---: | ---: |
+| Decode TPS (med, short) | 85.62 (82.66–90.33) | −21.7% | −12.4% |
+| Decode @4k (med) | 86.96 (83.71–89.05) | −20.9% | −3.8% |
+| Decode @16k (med) | 80.02 (77.52–85.18) | −22.9% | −8.0% |
+| Decode @32k (med) | 75.84 (73.18–82.13) | −25.1% | −12.5% |
+| Decode @64k (med) | 71.54 (66.11–79.01) | −23.3% | −9.0% |
+| Decode @96k (med, n=2) | 71.17 (69.11–71.17) | −20.7% | −8.7% |
+| Decode @128k (med, n=2) | 65.73 (64.52–65.73) | −20.6% | −7.1% |
+| Prefill 4k TPS | 1 841.3 (TTFT 2.25 s) | −20.4% | −0.8% |
+| Prefill 16k TPS | 2 199.7 (TTFT 7.41 s) | −14.3% | +9.9% |
+| Prefill 32k TPS | 2 217.4 (TTFT 14.75 s) | −14.9% | +5.2% |
+| Prefill 64k TPS | 2 149.3 (TTFT 30.42 s) | −10.9% | +6.0% |
+| Prefill 96k TPS | 1 985.6 (TTFT 49.62 s, n=2) | −8.8% | +7.6% |
+| Prefill 128k TPS | 1 837.0 (TTFT 70.22 s, n=2) | −8.6% | +6.7% |
+
+- **6.00 bpw loses on both axes vs the 4.00 bpw winner**: prefill −8 to −22%
+  (6144 narrows it to −8.6% at 128k) and decode −9 to −25% — the 128k totals
+  are 1 722.3 + 70.66 ≈ 1 793 and 1 837.0 + 65.73 ≈ 1 903, below the 4.0 bpw
+  winner's 2 092 in both cases. The Qwen3.6 win stays.
+- **Chunk size at 6.00 bpw**: bigger chunks buy prefill (+5 to +10% from
+  16k on; 4k −0.8%) while decode regresses from the short context on
+  (−12.4% short, −12.5% at 32k, −7.1% at 128k) — the wider gap vs the Q5
+  chunk pair shows up early, not just mid-range.
+- vs the pre-tune 11-12 Q6 asides (none/MTP/DFlash2, short-context only):
+  prefill is roughly doubled (1 857 / 2 000 vs 996 / 1 003 at 4k / 16k) and
+  short decode jumps to 99.3 vs 68.8 / 94.0 / 97.1 — the tweaked baseline did
+  the work, but those runs never reached 128k.
+
+Raw: [results/qwen/20261117T184703Z-q6-exl3-6-00bpw-hb6.json](results/qwen/20261117T184703Z-q6-exl3-6-00bpw-hb6.json), [results/qwen/20261117T190153Z-q6-exl3-6-00bpw-hb6.json](results/qwen/20261117T190153Z-q6-exl3-6-00bpw-hb6.json)
+
 ## GGUF runs — UD Q4_K_XL (llama.cpp, Strata, PolyStrata)
 
 Three more runs on the same day: the UD Q4_K_XL GGUF benchmarked with
@@ -437,6 +497,10 @@ red chunk 6144, solid olive chunk 5120).
 
 ![Qwen3.6 6.00 bpw plots](plots/qwen3.6-6.00bpw.png)
 
+The solid brown / orange lines are the 2026-11-17 tweaked-baseline full runs
+(chunk 5120 / 6144); the other points stay the 11-12 short-range bake-off
+(none / MTP / DFlash2, ~90–16k).
+
 **GGUF (UD Q4_K_XL: llama.cpp ± MTP vs PolyStrata)**
 
 ![Qwen3.6 GGUF UD Q4_K_XL: llama.cpp ± MTP vs PolyStrata](plots/qwen3.6-gguf-ud-q4-k-xl.png)
@@ -488,8 +552,9 @@ Generated with [`plots/qwen_per_quant.py`](plots/qwen_per_quant.py)
 
 ## Caveats
 
-- Runs beyond 32k exist only for the 4.00 and 5.00 bpw asides (both modes);
-  still outstanding for 6.00 bpw and the remaining short-range runs.
+- Runs beyond 32k: the 4.00 and 5.00 bpw 2-draft asides, plus the 2026-11-17
+  tweaked-baseline full runs including 6.00 bpw (18:47Z / 19:01Z). The 11-12
+  short-range bake-off still stops at 32k.
 - The 96k/128k decode medians rest on 2 runs († in each aside table).
 - The GGUF runs: llama.cpp stops at 32k (64k+ no-drafter still
   outstanding); Strata and PolyStrata reach 128k but their 96k/128k decode
@@ -509,6 +574,8 @@ Generated with [`plots/qwen_per_quant.py`](plots/qwen_per_quant.py)
 - `results/qwen/20261112T155239Z-qwen3-6-35b-a3b-ud-q4-k-xl.json` (GGUF UD Q4_K_XL, PolyStrata — full suite, 4k→128k)
 - `results/qwen/20261117T173715Z-qwen3-6-35b-a3b-exl3-5-00bpw.json` (5.00 bpw, MTP 2 draft tokens — tweaked baseline, chunk 6144, full range 4k→128k, 2026-11-17)
 - `results/qwen/20261117T180639Z-qwen3-6-35b-a3b-exl3-5-00bpw.json` (5.00 bpw, MTP 2 draft tokens — tweaked baseline, chunk 5120, full range 4k→128k, 2026-11-17)
+- `results/qwen/20261117T184703Z-q6-exl3-6-00bpw-hb6.json` (6.00 bpw, MTP 2 draft tokens — tweaked baseline, chunk 5120, full range 4k→128k, 2026-11-17)
+- `results/qwen/20261117T190153Z-q6-exl3-6-00bpw-hb6.json` (6.00 bpw, MTP 2 draft tokens — tweaked baseline, chunk 6144, full range 4k→128k, 2026-11-17)
 - `results/qwen/20261112T151400Z-qwen3-6-35b-a3b-ud-q4-k-xl.json` (GGUF UD Q4_K_XL, original Strata engine, Unsloth build — 4k→128k)
 - `results/qwen/20261112T134157Z-qwen-3-6-q4-llama.json` (GGUF UD Q4_K_XL, llama.cpp no-drafter)
 - `results/qwen/20261112T132841Z-qwen-3-6-q4-llama.json` (GGUF UD Q4_K_XL, llama.cpp MTP 3 draft tokens)

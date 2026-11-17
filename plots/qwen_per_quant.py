@@ -62,17 +62,21 @@ quants = {
     "q6": {
         "title": "Qwen3.6-35B-A3B — 6.00 bpw -hb6 (darkbit1001)",
         "out": "qwen3.6-6.00bpw.png",
-        "xs": [0.09, 4, 16],
+        "xs": [0.09, 4, 16, 32, 64, 96, 128],
         "labels": {"MTP": "MTP (4 drafts)", "DFlash2": "DFlash2 (5 drafts)"},
         "prefill": {
             "none":     [995.9, 1003.3],
             "MTP":      [906.9, 924.0],
             "DFlash2":  [921.1, 921.6],
+            "MTP (2), chunk 5120 Q6 (tweaked)": [1856.7, 2000.2, 2108.5, 2026.8, 1844.7, 1722.3],
+            "MTP (2), chunk 6144 Q6 (tweaked)": [1841.3, 2199.7, 2217.4, 2149.3, 1985.6, 1837.0],
         },
         "decode": {
             "none":     [68.8, 68.9, 67.2],
             "MTP":      [94.0, 86.3, 82.4],
             "DFlash2":  [97.1, 99.0, 88.5],
+            "MTP (2), chunk 5120 Q6 (tweaked)": [99.3, 90.4, 87.0, 86.7, 78.6, 78.0, 70.7],
+            "MTP (2), chunk 6144 Q6 (tweaked)": [85.6, 87.0, 80.0, 75.8, 71.5, 71.2, 65.7],
         },
     },
     "gguf": {
@@ -100,13 +104,13 @@ quants = {
 }
 
 # draw order, color, line style
-order = ["none", "MTP (2), chunk 5120 (tweaked)", "MTP (2), chunk 6144 (tweaked)", "MTP (2), chunk 6144 Q5 (tweaked)", "MTP (2), chunk 5120 Q5 (tweaked)", "MTP", "DFlash2", "PolyStrata", "MTP (2 drafts)", "DFlash2 (2 drafts)"]
+order = ["none", "MTP (2), chunk 5120 (tweaked)", "MTP (2), chunk 6144 (tweaked)", "MTP (2), chunk 6144 Q5 (tweaked)", "MTP (2), chunk 5120 Q5 (tweaked)", "MTP (2), chunk 5120 Q6 (tweaked)", "MTP (2), chunk 6144 Q6 (tweaked)", "MTP", "DFlash2", "PolyStrata", "MTP (2 drafts)", "DFlash2 (2 drafts)"]
 colors = {"none": "#2ca02c", "MTP (2), chunk 5120 (tweaked)": "#000000",
-          "MTP (2), chunk 6144 (tweaked)": "#ff7f0e", "MTP (2), chunk 6144 Q5 (tweaked)": "#d62728", "MTP (2), chunk 5120 Q5 (tweaked)": "#bcbd22", "MTP": "#e00080", "DFlash2": "#1f77b4",
+          "MTP (2), chunk 6144 (tweaked)": "#ff7f0e", "MTP (2), chunk 6144 Q5 (tweaked)": "#d62728", "MTP (2), chunk 5120 Q5 (tweaked)": "#bcbd22", "MTP (2), chunk 5120 Q6 (tweaked)": "#8c564b", "MTP (2), chunk 6144 Q6 (tweaked)": "#e6550d", "MTP": "#e00080", "DFlash2": "#1f77b4",
           "PolyStrata": "#9467bd",
           "MTP (2 drafts)": "#c0392b", "DFlash2 (2 drafts)": "#ff7f0e"}
 styles = {"none": "-", "MTP (2), chunk 5120 (tweaked)": "-", "MTP (2), chunk 6144 (tweaked)": "-",
-          "MTP (2), chunk 6144 Q5 (tweaked)": "-", "MTP (2), chunk 5120 Q5 (tweaked)": "-", "MTP": "-", "DFlash2": "-", "PolyStrata": "-",
+          "MTP (2), chunk 6144 Q5 (tweaked)": "-", "MTP (2), chunk 5120 Q5 (tweaked)": "-", "MTP (2), chunk 5120 Q6 (tweaked)": "-", "MTP (2), chunk 6144 Q6 (tweaked)": "-", "MTP": "-", "DFlash2": "-", "PolyStrata": "-",
           "MTP (2 drafts)": "--", "DFlash2 (2 drafts)": "--"}
 
 

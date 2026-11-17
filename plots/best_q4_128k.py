@@ -69,6 +69,26 @@ RUNS = [
         "decode": [98.5, 98.2, 90.9, 90.8, 84.5, 81.8, 74.8],
     },
     {
+        # 11-17 Q6 tweaked full run, chunk 5120 (tag-genuine, 18:47Z).
+        # Prefill ~15-20% below the 4.0 bpw winner; decode ~9-18% below.
+        # 128k total 1 722 + 70.7 = 1 793 — not a win.
+        "label": "Qwen3.6-35B-A3B — EXL3 6.0 bpw, MTP (2), chunk 5120 — exllamav3 (tweaked, 18:47Z)",
+        "color": "#8c564b",
+        "prefill": [1856.7, 2000.2, 2108.5, 2026.8, 1844.7, 1722.3],
+        "decode": [99.3, 90.4, 87.0, 86.7, 78.6, 78.0, 70.7],
+    },
+    {
+        # 11-17 Q6 tweaked full run, chunk 6144 (button's tag matches here).
+        # Prefill is clearly better than 5120 from 16k on (+4.9 to +9.1%),
+        # decode notably slower (−4 to −16%), especially on longer runs.
+        # 128k total 1 902.7 — still below the 4.0 bpw winner, but best Q6
+        # combo for this chart.
+        "label": "Qwen3.6-35B-A3B — EXL3 6.0 bpw, MTP (2), chunk 6144 — exllamav3 (tweaked, 19:01Z)",
+        "color": "#e6550d",
+        "prefill": [1841.3, 2199.7, 2217.4, 2149.3, 1985.6, 1837.0],
+        "decode": [85.6, 87.0, 80.0, 75.8, 71.5, 71.2, 65.7],
+    },
+    {
         # QFN Coder (only run): Polystrata nov-7, --spec 2
         "label": "Qwen3.8-Flash-Next Coder — IQ1_M — Polystrata nov-7, --spec 2",
         "color": "#2ca02c",

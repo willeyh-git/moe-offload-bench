@@ -86,6 +86,7 @@ bpw / UD Q4_K_XL GGUF); QFn Coder is IQ1_M, included for reference.
 | --- | --- | ---: | ---: |
 | Ornith 1.5 35B-A3B | EXL3 4.0 bpw, no-spec / exllamav3 (tweaked)† | **1 925 tok/s** | **55.7 tok/s** |
 | Qwen3.6-35B-A3B | EXL3 4.0 bpw, MTP (2), chunk 5120 / exllamav3 (tweaked) | **2 009 tok/s** | **82.8 tok/s** |
+| Qwen3.6-35B-A3B (6.00 bpw best combo)†† | EXL3 6.0 bpw, MTP (2), chunk 6144 / exllamav3 (tweaked) | 1 837 tok/s | 65.1 tok/s |
 | Qwen3.8-Flash-Next Coder | IQ1_M / Polystrata nov-7 `--spec 2` | 1 572 tok/s | 44.0 tok/s |
 | KAT-Coder V2.5 Dev (MTP) | EXL3 5.0 bpw (hq), MTP (2), chunk 5120 / exllamav3 (tweaked)‡ | **1 203 tok/s** | **53.6 tok/s** |
 | Nemotron 3.5 Lightning 30B-A3B | EXL3 3.25 bpw, Q8 cache, no-spec / exllamav3§ | **2 973 tok/s** | **78.8 tok/s** |
@@ -101,7 +102,11 @@ both prefill and decode, so it does not take the win (128k total 2 079 vs
 17:37Z, tag says “batch 5120” but the run used chunk 6144, and 18:06Z at a
 genuine chunk 5120): 1 955 / 75.0 (total 2 029.6) and 1 861 / 75.5 (total
 1 936.5) at 128k — not wins either (chunk 5120 decodes better at 32k–96k,
-chunk 6144 prefills better). See
+chunk 6144 prefills better). The tweaked baseline was also run at 6.00 bpw
+(18:47Z chunk 5120, 19:01Z chunk 6144): 1 722 / 70.7 (total ≈ 1 793) and
+1 837 / 65.1 (total ≈ 1 903) — 6.00 bpw loses ~15–21% more decode than the
+4.0 bpw winner and the Q6 128k row above is only the best Q6 combo, not a
+challenger for the Qwen3.6 win. See
 [Qwen3.6-35b-a3b-improvements.md](Qwen3.6-35b-a3b-improvements.md) and
 [QWEN3.6-35B-A3B.md](QWEN3.6-35B-A3B.md).
 
@@ -120,6 +125,12 @@ prior same-day run (2026-11-17 14:19Z) stopped short of 128k, so the winner
 above is the 15:12Z run with max_context 153 600 (see
 [NEMOTRON3.5-LIGHTNING.md](NEMOTRON3.5-LIGHTNING.md)).
 
+†† Q6 row: best of the two tweaked Q6 full runs (18:47Z chunk 5120: 1 722 / 70.7;
+19:01Z chunk 6144: 1 837 / 65.1, 155 experts offloaded, ~14.3–14.7 GB VRAM),
+96k/128k decode medians rest on 2 runs each. Neither approaches the Qwen3.6
+winner (totals ≈ 1 793 / 1 903 vs 2 092) — 6.00 bpw mainly loses decode; see
+the 6.00 bpw section of [QWEN3.6-35B-A3B.md](QWEN3.6-35B-A3B.md).
+
 Generated with [`plots/best_q4_128k.py`](plots/best_q4_128k.py)
 (`uv run --with matplotlib python best_q4_128k.py`).
 
@@ -133,14 +144,16 @@ per-model files.
 See [ORNITH1.5-35B-A3B.md](ORNITH1.5-35B-A3B.md) — canonical, superseded and
 stale runs annotated there.
 
-### `results/qwen/` — Qwen3.6-35B-A3B (30 files)
+### `results/qwen/` — Qwen3.6-35B-A3B (32 files)
 
 - `20261112T155239Z-qwen3-6-35b-a3b-ud-q4-k-xl.json` (UD Q4_K_XL, PolyStrata)
 - `20261112T151400Z-qwen3-6-35b-a3b-ud-q4-k-xl.json` (UD Q4_K_XL, Strata Unsloth build)
 - `20261112T134157Z-qwen-3-6-q4-llama.json` (llama.cpp no-drafter)
 - `20261112T132841Z-qwen-3-6-q4-llama.json` (llama.cpp MTP)
-- 13 × `exllamav3-20261112T…-q{4,5,6}-exl3-*.json` (EXL3 4.00/5.00/6.00 bpw; no-spec /
-  MTP / DFlash2 short-range runs plus 2-draft asides)
+- 15 × `exllamav3-20261112T…-q{4,5,6}-exl3-*.json` / `20261117T…Z-q6-exl3-6-00bpw-hb6.json`
+  (EXL3 4.00/5.00/6.00 bpw; no-spec / MTP / DFlash2 short-range runs plus
+  2-draft asides, and the two 2026-11-17 Q6 tweaked full runs — chunk 5120
+  18:47Z, chunk 6144 19:01Z)
 - 11 × `20261115T…Z-…-exl3-4-00bpw.json` / `20261117T095948Z-…json` (tweak-bake-off runs
   0–9 from 2026-11-15 plus the 2026-11-17 chunk-6144 re-run — see
   [Qwen3.6-35b-a3b-improvements.md](Qwen3.6-35b-a3b-improvements.md) for tags)
